@@ -99,6 +99,7 @@ class Emulator:
         elif state.robot.battery >= 10:
             reward += self.sufficient_battery.get(action)[0]
             probability *= self.sufficient_battery.get(action)[1]
+<<<<<<< HEAD
 
         # Position check
         if state.robot.orientation == 0:
@@ -153,4 +154,7 @@ class Emulator:
             reward += self.dirty_cell.get(action)[0]
             probability *= self.dirty_cell.get(action)[1]
         
+=======
+            
+>>>>>>> aa1208d87b10b918806b5ed251589770302a1636
         return newstate

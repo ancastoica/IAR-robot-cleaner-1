@@ -44,11 +44,11 @@ class Robot:
             self.battery = self.battery - 1
 
             if self.orientation == 0 and self.y != self.Y:
-                self.y = self.y + 1
+                self.y = self.y - 1
             elif self.orientation == 1 and self.x != self.X:
                 self.x = self.x + 1
             elif self.orientation == 2 and self.y != 0:
-                self.y = self.y - 1
+                self.y = self.y + 1
             elif self.orientation == 3 and self.x != 0:
                 self.x = self.x - 1
 

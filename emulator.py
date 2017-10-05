@@ -152,5 +152,5 @@ class Emulator:
         elif self.map[state.robot.x][state.robot.y].dirty == 1:
             reward += self.dirty_cell.get(action)[0]
             probability *= self.dirty_cell.get(action)[1]
-        
+
         return newstate

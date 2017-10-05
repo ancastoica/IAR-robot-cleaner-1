@@ -6,22 +6,22 @@ class Emulator:
     def __init__(self):
         self.map = [[Cell(0, 0) for j in range(3)] for i in range(3)]  # The map matrices containing the cells
         self.algorithm = 0  # 0 for dynamic programming, 1 for MonteCarlo, 2 for Time Differentials
-        # rewards model under the idea of (action reward + battery reward + time reward)
-        self.empty_battery = {"go_forward_vacuuming": (-100 + -1 + -1 + -1),
-                              "go_forward_no_vacuuming": (-100 + -1 + -1),
-                              "rotate_left": (-100 + -1 + -1),
-                              "rotate_right": (-100 + -1 + -1),
-                              "vacuum": (-100 + -1 + -1)}
-        self.critical_battery = {"go_forward_vacuuming": (-3 + -1 + -1 + -1),
-                                 "go_forward_no_vacuuming": (0 + -1 + -1),
-                                 "rotate_left": (0 + -1 + -1),
-                                 "rotate_right": (0 + -1 + -1),
-                                 "vacuum": (-5 + -1 + -1)}
-        self.sufficient_battery = {"go_forward_vacuuming": (0 + -1 + -1 + -1),
-                                   "go_forward_no_vacuuming": (0 + -1 + -1),
-                                   "rotate_left": (0 + -1 + -1),
-                                   "rotate_right": (0 + -1 + -1),
-                                   "vacuum": (0 + -1 + -1)}
+        # rewards model under the idea of (action reward + time reward)
+        self.empty_battery = {"go_forward_vacuuming": (-100 + -1),
+                              "go_forward_no_vacuuming": (-100 + -1),
+                              "rotate_left": (-100 + -1),
+                              "rotate_right": (-100 + -1),
+                              "vacuum": (-100 + -1)}
+        self.critical_battery = {"go_forward_vacuuming": (-3 + -1),
+                                 "go_forward_no_vacuuming": (0 + -1),
+                                 "rotate_left": (0 + -1),
+                                 "rotate_right": (0 + -1),
+                                 "vacuum": (-5 + -1)}
+        self.sufficient_battery = {"go_forward_vacuuming": (0 + -1),
+                                   "go_forward_no_vacuuming": (0 + -1),
+                                   "rotate_left": (0 + -1),
+                                   "rotate_right": (0 + -1),
+                                   "vacuum": (0 + -1)}
         self.front_wall = {"go_forward_vacuuming": -10,
                            "go_forward_no_vacuuming": -10,
                            "rotate_left": 10,

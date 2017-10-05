@@ -150,11 +150,30 @@ class Emulator:
                 probability *= self.right_wall.get(action)[1]
 
         # Dirtiness check
-        if self.map[state.robot.x][state.robot.y].dirty == 0:
+        if newstate.mapp[state.robot.x][state.robot.y].dirty == 0:
             reward += self.clean_cell.get(action)[0]
             probability *= self.clean_cell.get(action)[1]
-        elif self.map[state.robot.x][state.robot.y].dirty == 1:
+        elif newstate.mapp[state.robot.x][state.robot.y].dirty == 1:
             reward += self.dirty_cell.get(action)[0]
             probability *= self.dirty_cell.get(action)[1]
+
+        # Probability computation and robot parameters update
+        if action == "go_forward_vacuuming":
+            dice = randrange(1, 100)
+            if dice <= probability * 100:
+                newstate.robot.go_forward()
+            newstate.mapp[state.robot.x][state.robot.y].clean()
+            newstate.robot.lower_battery()
+        elif action == "go_forward_no_vacuuming":
+            dice = randrange(1, 100)
+            if dice <= probability * 100:
+                newstate.robot.go_forward()
+        elif action == "rotate_right":
+            newstate.robot.rotate_right()
+        elif action == "rotate_left":
+            newstate.robot.rotate_left()
+        elif action == "vacuum":
+            newstate.mapp[state.robot.x][state.robot.y].clean()
+            newstate.robot.lower_battery()
 
         return newstate

@@ -83,5 +83,20 @@ class Emulator:
     Simulate the model according to the algorithm we're using
     """
 
-    def simulate(self):
-        return
+    def simulate(self, state, action):
+        reward = 0
+        probability = 0.0
+        newstate = state
+
+        # Battery check
+        if state.robot.battery == 0:
+            reward += self.empty_battery.get(action)[0]
+            probability *= self.empty_battery.get(action)[1]
+        elif state.robot.battery <= 10:
+            reward += self.critical_battery.get(action)[0]
+            probability *= self.critical_battery.get(action)[1]
+        elif state.robot.battery >= 10:
+            reward += self.sufficient_battery.get(action)[0]
+            probability *= self.sufficient_battery.get(action)[1]
+            
+        return newstate

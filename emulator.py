@@ -1,12 +1,15 @@
 from random import randrange
 from cell import Cell
+from state import State
+from robot import Robot
 
 
 class Emulator:
     def __init__(self):
         self.map = [[Cell(0, 0) for j in range(3)] for i in range(3)]  # The map matrices containing the cells
+        self.mapsize = 3  # Number of cells knowing that the map is a square
+        self.firstState = State(Robot(0, 0, self.mapsize, self.mapsize), self.map)
         self.algorithm = 0  # 0 for dynamic programming, 1 for MonteCarlo, 2 for Time Differentials
-        self.mapsize = 3    # Number of cells knowing that the map is a square
         # rewards and transition model under the idea of ((action reward + time reward), probability of success)
         self.empty_battery = {"go_forward_vacuuming": ((-100 + -1), 0.0),
                               "go_forward_no_vacuuming": ((-100 + -1), 0.0),
@@ -62,21 +65,22 @@ class Emulator:
                 else:
                     self.map[i][j] = Cell(i, j, randrange(2))
                 nb += 1
-        self.printmap()
-
+        self.firstState.mapp = self.map
+        self.printmap(self.firstState.mapp)
+        
     """
     Prints the map in the terminal (h = homebase, x = dirty, o = clean)
     """
 
-    def printmap(self):
+    def printmap(self, mapp):
         for i in range(3):
             line = ""
             for j in range(3):
-                if self.map[i][j].home == 1:
+                if mapp[i][j].home == 1:
                     line += "h"
-                elif self.map[i][j].dirty == 1:
+                elif mapp[i][j].dirty == 1:
                     line += "x"
-                elif self.map[i][j].dirty == 0:
+                elif mapp[i][j].dirty == 0:
                     line += "o"
             print(line)
 

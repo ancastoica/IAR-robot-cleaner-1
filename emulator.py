@@ -22,31 +22,31 @@ class Emulator:
                                    "rotate_left": (0 + -1 + -1),
                                    "rotate_right": (0 + -1 + -1),
                                    "vacuum": (0 + -1 + -1)}
-        self.front_wall = {"go_forward_vacuuming": (-10 + -1 + -1 + -1),
-                           "go_forward_no_vacuuming": (-10 + -1 + -1),
-                           "rotate_left": (10 + -1 + -1),
-                           "rotate_right": (10 + -1 + -1),
-                           "vacuum": (0 + -1 + -1)}
-        self.right_wall = {"go_forward_vacuuming": (0 + -1 + -1 + -1),
-                           "go_forward_no_vacuuming": (0 + -1 + -1),
-                           "rotate_left": (0 + -1 + -1),
-                           "rotate_right": (-10 + -1 + -1),
-                           "vacuum": (0 + -1 + -1)}
-        self.left_wall = {"go_forward_vacuuming": (0 + -1 + -1 + -1),
-                          "go_forward_no_vacuuming": (0 + -1 + -1),
-                          "rotate_left": (-10 + -1 + -1),
-                          "rotate_right": (0 + -1 + -1),
-                          "vacuum": (0 + -1 + -1)}
-        self.dirty_cell = {"go_forward_vacuuming": (40 + -1 + -1 + -1),
-                           "go_forward_no_vacuuming": (-40 + -1 + -1),
-                           "rotate_left": (0 + -1 + -1),
-                           "rotate_right": (0 + -1 + -1),
-                           "vacuum": (40 + -1 + -1)}
-        self.clean_cell = {"go_forward_vacuuming": (-10 + -1 + -1 + -1),
-                           "go_forward_no_vacuuming": (5 + -1 + -1),
-                           "rotate_left": (0 + -1 + -1),
-                           "rotate_right": (0 + -1 + -1),
-                           "vacuum": (-10 + -1 + -1)}
+        self.front_wall = {"go_forward_vacuuming": -10,
+                           "go_forward_no_vacuuming": -10,
+                           "rotate_left": 10,
+                           "rotate_right": 10,
+                           "vacuum": 0}
+        self.right_wall = {"go_forward_vacuuming": 0,
+                           "go_forward_no_vacuuming": 0,
+                           "rotate_left": 0,
+                           "rotate_right": -10,
+                           "vacuum": 0}
+        self.left_wall = {"go_forward_vacuuming": 0,
+                          "go_forward_no_vacuuming": 0,
+                          "rotate_left": -10,
+                          "rotate_right": 0,
+                          "vacuum": 0}
+        self.dirty_cell = {"go_forward_vacuuming": 40,
+                           "go_forward_no_vacuuming": -40,
+                           "rotate_left": 0,
+                           "rotate_right": 0,
+                           "vacuum": 40}
+        self.clean_cell = {"go_forward_vacuuming": -10,
+                           "go_forward_no_vacuuming": 5,
+                           "rotate_left": 0,
+                           "rotate_right": 0,
+                           "vacuum": -10}
 
     """
     Creates a 3x3 map with random dirtiness state

@@ -6,6 +6,7 @@ class Emulator:
     def __init__(self):
         self.map = [[Cell(0, 0) for j in range(3)] for i in range(3)]  # The map matrices containing the cells
         self.algorithm = 0  # 0 for dynamic programming, 1 for MonteCarlo, 2 for Time Differentials
+        self.mapsize = 3    # Number of cells knowing that the map is a square
         # rewards and transition model under the idea of ((action reward + time reward), probability of success)
         self.empty_battery = {"go_forward_vacuuming": ((-100 + -1), 0.0),
                               "go_forward_no_vacuuming": ((-100 + -1), 0.0),
@@ -54,8 +55,8 @@ class Emulator:
 
     def createmap(self):
         nb = 0
-        for i in range(3):
-            for j in range(3):
+        for i in range(self.mapsize):
+            for j in range(self.mapsize):
                 if nb == 0:
                     self.map[i][j] = Cell(i, j, randrange(2), 1)
                 else:

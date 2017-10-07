@@ -1,8 +1,9 @@
 class Robot:
     def __init__(self, x, y, X, Y, orientation=1, battery=100):
         """
-        Position x, y
-        Orientation entre 0 et 4, on met a 1 par defaut
+        Robot's position x, y
+        Boundaries of the map - number of lines Y and number of columns X
+        Orientation between 0 and 4:
            0
         3 | | 1
            2
@@ -22,7 +23,7 @@ class Robot:
 
     def rotate_right(self):
         """
-        Rotation -90 dgr => orientation 2 devient 3, 3 devient 0 etc.
+        Right rotation => orientation 2 becomes 3, 3 becomes 0 etc.
         """
         if self.battery > 0:
             self.orientation = (self.orientation + 1) % 4
@@ -30,7 +31,7 @@ class Robot:
 
     def rotate_left(self):
         """
-        Rotation +90 dgr => orientation 3 devient 2, 0 devient 3 etc.
+        Left rotation => orientation 3 becomes 2, 0 becomes 3 etc.
         """
         if self.battery > 0:
             self.orientation = (self.orientation - 1) % 4
@@ -38,7 +39,7 @@ class Robot:
 
     def go_forward(self):
         """
-        Avance 1 case dans le sens de l'orientation, rotation si avancement pas possible
+        Go forward 1 cell according to the orientation - only if possible (between boundaries)
         """
         if self.battery > 0:
             self.battery = self.battery - 1
@@ -53,6 +54,9 @@ class Robot:
                 self.x = self.x - 1
 
     def lower_battery(self, n=1):
+        """
+        Lower robot's battery by n units
+        """
         if self.battery >= n:
             self.battery = self.battery - n
         else:

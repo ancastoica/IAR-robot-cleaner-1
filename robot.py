@@ -16,9 +16,9 @@ class Robot:
         self.battery = battery
 
     def set_position(self, x, y):
-        if x >= 0 and x <= self.X:
+        if 0 <= x <= self.X:
             self.x = x
-        if y >= 0 and y <= self.Y:
+        if 0 <= y <= self.Y:
             self.y = y
 
     def rotate_right(self):

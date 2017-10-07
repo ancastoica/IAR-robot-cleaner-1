@@ -10,6 +10,9 @@ class Emulator:
         self.mapsize = 3  # Number of cells knowing that the map is a square
         self.firstState = State(Robot(0, 0, self.mapsize, self.mapsize), self.map)
         self.algorithm = 0  # 0 for dynamic programming, 1 for MonteCarlo, 2 for Time Differentials
+        self.period = 3
+        self.iterationnb = 0
+
         # rewards and transition model under the idea of ((action reward + time reward), probability of success)
         self.empty_battery = {"go_forward_vacuuming": ((-100 + -1), 0.0),
                               "go_forward_no_vacuuming": ((-100 + -1), 0.0),
@@ -188,4 +191,11 @@ class Emulator:
             print("Unrecognized state in function simulate")
             return
 
-        return newstate, reward
+        print(reward)
+        self.iterationnb += 1
+        if self.iterationnb < self.period:
+            self.simulate(newstate, self.actions[randrange(0, len(self.actions))])
+        return reward
+
+    def resetiterationnb(self):
+        self.iterationnb = 0

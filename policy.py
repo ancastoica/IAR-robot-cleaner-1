@@ -56,9 +56,6 @@ class Policy:
     initialize the policy as an array of 3 dimensionnal arrays filled with 0
     """
     def init_policy(self, length):
-        self.matrix = [[0, 0] for i in range(length)]
-
-    def init_policy_MC(self, length):
         self.matrix = [[0, 0, 0] for i in range(length)]
 
     def state_exists(self, state):
@@ -84,15 +81,3 @@ class Policy:
         else:
             self.matrix[index][1] = new_action
             self.matrix[index][2] = new_reward
-
-    def insert_state_action_reward(self, index, state, action, reward):
-        if index < len(self.matrix):
-            policytuple = self.matrix[index]
-            policytuple[0] = state
-            policytuple[1] = action
-            policytuple[2] = reward
-            self.matrix[index] = policytuple
-        else:
-            print("Out of bounds when inserting a state and action in policy")
-            return
-        self.matrix = [[0, 0, 0] for i in range(length)]

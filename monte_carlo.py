@@ -18,7 +18,7 @@ class MC:
         q = {}
         sa_counter = {}
         policy = Policy()
-        policy.init_policy_MC(1000)
+        policy.init_policy(1000)
         index_policy = 0
         while i < limit:
             i += 1
@@ -75,7 +75,7 @@ class MC:
                     if r > old_r:
                         policy.update_action_for_state(hash_s, a, r)
                 else:
-                    policy.insert_state_action_reward(index_policy, hash_s, a, r)
+                    policy.insert_state_action(index_policy, hash_s, a, r)
                     index_policy += 1
                 average_reward += r
 
@@ -87,4 +87,5 @@ class MC:
                     q[hash_s, a] = r
 
             average_reward = average_reward / (EPISODE_LENGTH - 1)
-            self.tuple_plot.append(i, average_reward)
+            self.tuple_plot_x.append(i)
+            self.tuple_plot_y.append(average_reward)

@@ -69,22 +69,6 @@ class Emulator:
                     self.state.mapp[i][j] = Cell(i, j, randrange(2))
                 nb += 1
 
-
-    """
-    Prints the map in the terminal (h = homebase, x = dirty, o = clean)
-    """
-    def printmap(self, mapp):
-        for i in range(3):
-            line = ""
-            for j in range(3):
-                if mapp[i][j].home == 1:
-                    line += "h"
-                elif mapp[i][j].dirty == 1:
-                    line += "x"
-                elif mapp[i][j].dirty == 0:
-                    line += "o"
-            print(line)
-
     """
     Simulate the model according to the algorithm we're using
     """
@@ -187,7 +171,7 @@ class Emulator:
             return
 
         self.iterationnb += 1
-        return reward, newstate
+        return reward, newstate, probability
 
     def resetiterationnb(self):
         self.iterationnb = 0

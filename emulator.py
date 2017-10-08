@@ -1,12 +1,10 @@
 from random import randrange
 from cell import Cell
-from state import State
-from robot import Robot
+import api
 
 
 class Emulator:
     def __init__(self, state):
-        self.mapsize = 3  # Number of cells knowing that the map is a square
         self.algorithm = "DP"
         self.iterationnb = 0
         self.state = state
@@ -61,8 +59,8 @@ class Emulator:
     """
     def randommap(self):
         nb = 0
-        for i in range(self.mapsize):
-            for j in range(self.mapsize):
+        for i in range(api.MAPSIZE):
+            for j in range(api.MAPSIZE):
                 if nb == 0:
                     self.state.mapp[i][j] = Cell(i, j, randrange(2), 1)
                 else:
@@ -102,7 +100,7 @@ class Emulator:
                 if state.robot.y == 0:
                     reward += self.front_wall.get(action)[0]
                     probability *= self.front_wall.get(action)[1]
-                if state.robot.x == self.mapsize - 1:
+                if state.robot.x == api.MAPSIZE - 1:
                     reward += self.right_wall.get(action)[0]
                     probability *= self.right_wall.get(action)[1]
 
@@ -110,18 +108,18 @@ class Emulator:
                 if state.robot.y == 0:
                     reward += self.left_wall.get(action)[0]
                     probability *= self.left_wall.get(action)[1]
-                if state.robot.x == self.mapsize - 1:
+                if state.robot.x == api.MAPSIZE - 1:
                     reward += self.front_wall.get(action)[0]
                     probability *= self.front_wall.get(action)[1]
-                if state.robot.y == self.mapsize - 1:
+                if state.robot.y == api.MAPSIZE - 1:
                     reward += self.right_wall.get(action)[0]
                     probability *= self.right_wall.get(action)[1]
 
             elif state.robot.orientation == 2:
-                if state.robot.x == self.mapsize - 1:
+                if state.robot.x == api.MAPSIZE - 1:
                     reward += self.left_wall.get(action)[0]
                     probability *= self.left_wall.get(action)[1]
-                if state.robot.y == self.mapsize - 1:
+                if state.robot.y == api.MAPSIZE - 1:
                     reward += self.front_wall.get(action)[0]
                     probability *= self.front_wall.get(action)[1]
                 if state.robot.x == 0:
@@ -129,7 +127,7 @@ class Emulator:
                     probability *= self.right_wall.get(action)[1]
 
             elif state.robot.orientation == 3:
-                if state.robot.y == self.mapsize - 1:
+                if state.robot.y == api.MAPSIZE - 1:
                     reward += self.left_wall.get(action)[0]
                     probability *= self.left_wall.get(action)[1]
                 if state.robot.x == 0:

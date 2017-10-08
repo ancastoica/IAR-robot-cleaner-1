@@ -5,13 +5,11 @@ from robot import Robot
 
 
 class Emulator:
-    def __init__(self):
-        self.map = [[Cell(0, 0) for j in range(3)] for i in range(3)]  # The map matrices containing the cells
+    def __init__(self, state):
         self.mapsize = 3  # Number of cells knowing that the map is a square
-        self.firstState = State(Robot(0, 0, self.mapsize, self.mapsize), self.map)
-        self.algorithm = 0  # 0 for dynamic programming, 1 for MonteCarlo, 2 for Time Differentials
-        self.period = 3
+        self.algorithm = "DP"
         self.iterationnb = 0
+        self.state = state
 
         # rewards and transition model under the idea of ((action reward + time reward), probability of success)
         self.empty_battery = {"go_forward_vacuuming": ((-100 + -1), 0.0),
@@ -61,23 +59,20 @@ class Emulator:
     """
     Creates a 3x3 map with random dirtiness state
     """
-
-    def createmap(self):
+    def randommap(self):
         nb = 0
         for i in range(self.mapsize):
             for j in range(self.mapsize):
                 if nb == 0:
-                    self.map[i][j] = Cell(i, j, randrange(2), 1)
+                    self.state.mapp[i][j] = Cell(i, j, randrange(2), 1)
                 else:
-                    self.map[i][j] = Cell(i, j, randrange(2))
+                    self.state.mapp[i][j] = Cell(i, j, randrange(2))
                 nb += 1
-        self.firstState.mapp = self.map
-        self.printmap(self.firstState.mapp)
+
 
     """
     Prints the map in the terminal (h = homebase, x = dirty, o = clean)
     """
-
     def printmap(self, mapp):
         for i in range(3):
             line = ""
@@ -191,11 +186,8 @@ class Emulator:
             print("Unrecognized state in function simulate")
             return
 
-        print(reward)
         self.iterationnb += 1
-        if self.iterationnb < self.period:
-            self.simulate(newstate, self.actions[randrange(0, len(self.actions))])
-        return reward
+        return reward, newstate
 
     def resetiterationnb(self):
         self.iterationnb = 0

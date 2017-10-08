@@ -5,6 +5,7 @@ from cell import Cell
 
 
 MAPSIZE = 3
+ACTIONS = ["go_forward_vacuuming", "go_forward_no_vacuuming", "rotate_left", "rotate_right", "vacuum"]
 
 
 def printmap(mapp):

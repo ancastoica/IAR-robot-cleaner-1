@@ -35,3 +35,20 @@ class DP:
         robot = Robot(robot_x, robot_y, api.MAPSIZE, api.MAPSIZE, robot_orientation, abs_battery)
         self.states.append(State(robot, mapp, (base_x, base_y)))
 
+    def run(self):
+        self.generate_all_states()
+        emulator = Emulator("dynamic_programming")
+        policy = Policy()
+        policy.init_policy(len(self.states))
+        rewards = [0 for i in range(len(api.ACTIONS))]
+        newstates = [0 for i in range(len(api.ACTIONS))]
+        probabilities = [0 for i in range(len(api.ACTIONS))]
+
+        for i in range(len(self.states)):
+            for j in range(len(api.ACTIONS)):
+                rewards[j], newstates[j], probabilities[j] = emulator.simulate(self.states[i], api.ACTIONS[j])
+
+                maximum_reward = max(rewards)
+                optimal_action = api.ACTIONS[rewards.index(maximum_reward)]
+                #policy.insert_state_action(i, self.states[i], optimal_action)
+        print(policy.matrix)

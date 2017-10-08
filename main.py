@@ -4,7 +4,6 @@ from dynamic_programming import DP
 
 # Initialization
 DP = DP()
-DP.generate_all_states()
-
+DP.run()
 
 # End of simulation

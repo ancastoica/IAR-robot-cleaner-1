@@ -11,9 +11,17 @@ class Monte_Carlo:
         self.size = self.emulator.mapsize
 
     def random_state(self):
-        self.emulator.createmap()
+        nb = 0
+        mapp = [[Cell(0, 0) for j in range(self.size)] for i in range(self.size)]
+        for i in range(self.emulator.mapsize):
+            for j in range(self.emulator.mapsize):
+                if nb == 0:
+                    mapp[i][j] = Cell(i, j, randrange(2), 1)
+                else:
+                    mapp[i][j] = Cell(i, j, randrange(2))
+                nb += 1
         robot = Robot(randrange(self.size),randrange(self.size))
-        return State(robot, self.emulator.map)
+        return State(robot, mapp)
 
     def generate_episode(self, n):
         episode = []
@@ -37,4 +45,5 @@ class Monte_Carlo:
                     Returns.append(G)
                     Q[(s, a)] = G
             for s in [e[0] for e in episode]:
-                # π ← pi-greedy w.r.t Q0
+                # pi ← pi-greedy w.r.t Q0
+                return

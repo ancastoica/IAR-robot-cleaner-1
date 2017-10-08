@@ -55,19 +55,6 @@ class Emulator:
         self.actions = ["go_forward_vacuuming", "go_forward_no_vacuuming", "rotate_left", "rotate_right", "vacuum"]
 
     """
-    Creates a 3x3 map with random dirtiness state
-    """
-    def randommap(self):
-        nb = 0
-        for i in range(api.MAPSIZE):
-            for j in range(api.MAPSIZE):
-                if nb == 0:
-                    self.state.mapp[i][j] = Cell(i, j, randrange(2), 1)
-                else:
-                    self.state.mapp[i][j] = Cell(i, j, randrange(2))
-                nb += 1
-
-    """
     Simulate the model according to the algorithm we're using
     """
 

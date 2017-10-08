@@ -1,9 +1,13 @@
-from emulator import Emulator
-from random import randrange
 from dynamic_programming import DP
 
 # Initialization
 DP = DP()
-DP.run()
+policymatrix = DP.run()
 
 # End of simulation
+average = 0
+for i in range(len(policymatrix)):
+    average = average + policymatrix[i][2]
+
+average = average / len(policymatrix)
+print("Average performance : ", average)

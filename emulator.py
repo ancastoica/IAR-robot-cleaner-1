@@ -1,5 +1,4 @@
 from random import randrange
-from cell import Cell
 import api
 
 

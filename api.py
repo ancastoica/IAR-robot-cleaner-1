@@ -4,10 +4,13 @@ from random import randrange
 from cell import Cell
 
 
-MAPSIZE = 3
-ACTIONS = ["go_forward_vacuuming", "go_forward_no_vacuuming", "rotate_left", "rotate_right", "vacuum"]
+MAPSIZE = 3     # The size of the map knowing that it is a square
+ACTIONS = ["go_forward_vacuuming", "go_forward_no_vacuuming", "rotate_left", "rotate_right", "vacuum"]      # List of possible actions
+DISCOUNTED_FACTOR = 0.01    # The factor used to make the series converge
 
-
+"""
+Print a terminal version of the map
+"""
 def printmap(mapp):
     for i in range(len(mapp)):
         line = ""
@@ -21,6 +24,9 @@ def printmap(mapp):
         print(line)
 
 
+"""
+Print a readable state
+"""
 def printstate(state):
     print("Robot coordinates : (", state.robot.x, ", ", state.robot.y, ")")
     print("Robot battery : ", state.robot.battery)
@@ -29,6 +35,9 @@ def printstate(state):
     printmap(state.mapp)
 
 
+"""
+Creates a random map given the position of the homebase
+"""
 def randommap(basex, basey):
     mapp = [[Cell(0, 0) for j in range(MAPSIZE)] for i in range(MAPSIZE)]
 
@@ -41,6 +50,9 @@ def randommap(basex, basey):
     return mapp
 
 
+"""
+Creates a random states with random robot and map
+"""
 def randomstate():
     base = (randrange(0, MAPSIZE), randrange(0, MAPSIZE))
     robot = Robot(randrange(0, MAPSIZE), randrange(0, MAPSIZE), MAPSIZE, MAPSIZE, randrange(0, 4), randrange(0, 100))

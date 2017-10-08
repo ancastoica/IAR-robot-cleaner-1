@@ -11,25 +11,31 @@ class Policy:
 
     def insert_action(self, index, action):
         if index < len(self.matrix):
-            self.matrix[index][1] = action
+            policytuple = self.matrix[index]
+            policytuple[1] = action
+            self.matrix[index] = policytuple
         else:
             print("Out of bounds when inserting an action in policy")
             return
 
     def insert_state(self, index, state):
         if index < len(self.matrix):
-            self.matrix[index][0] = state
+            policytuple = self.matrix[index]
+            policytuple[0] = state
+            self.matrix[index] = policytuple
         else:
             print("Out of bounds when inserting a state in policy")
             return
 
     def insert_state_action(self, index, state, action):
         if index < len(self.matrix):
-            self.matrix[index][0] = state
-            self.matrix[index][1] = action
+            policytuple = self.matrix[index]
+            policytuple[0] = state
+            policytuple[1] = action
+            self.matrix[index] = policytuple
         else:
             print("Out of bounds when inserting a state and action in policy")
             return
 
     def init_policy(self, length):
-        self.matrix = [(0, 0) for i in range(length)]
+        self.matrix = [[0, 0] for i in range(length)]

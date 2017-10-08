@@ -58,6 +58,7 @@ class DP:
         # Initialization of the simulation
         self.generate_all_states()
         self.values = [0 for i in range(len(self.states))]
+        averageperf = []
         emulator = Emulator("dynamic_programming")
         policy = Policy()
         policy.init_policy(len(self.states))
@@ -87,7 +88,20 @@ class DP:
 
             # If the threshold is bigger than the difference between Vs and their predecessors, then we consider the algorithm as successful
             if self.get_infinite_norme(policy.matrix, self.values) < self.threshold:
-                break
+                average = 0
+                for i in range(len(policy.matrix)):
+                    average = average + policy.matrix[i][2]
 
-        return policy.matrix
+                average = average / len(policy.matrix) * -1
+                averageperf.append(average)
+                break
+            else:
+                average = 0
+                for i in range(len(policy.matrix)):
+                    average = average + policy.matrix[i][2]
+
+                average = average / len(policy.matrix) * -1
+                averageperf.append(average)
+
+        return averageperf
 

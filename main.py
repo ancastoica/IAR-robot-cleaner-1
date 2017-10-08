@@ -1,13 +1,17 @@
 from dynamic_programming import DP
+import matplotlib.pyplot as plt
+import numpy as np
 
+
+"""
+Dynamic Programming
+"""
 # Initialization
 DP = DP()
-policymatrix = DP.run()
+averageperf = DP.run()
 
 # End of simulation
-average = 0
-for i in range(len(policymatrix)):
-    average = average + policymatrix[i][2]
-
-average = average / len(policymatrix)
-print("Average performance : ", average)
+x = np.linspace(0, 1, len(averageperf))
+plt.plot(x * 1000, averageperf)
+plt.legend("Dynamic Programming")
+plt.show()

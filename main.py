@@ -16,14 +16,14 @@ for i in range(len(policymatrix)):
     print(policymatrix[i][2])
 
 
-# """
-# Monte Carlo
-# """
-# # Initialization
-# MC = MC()
-# MC.run(1000000)
-#
-# # End of simulation
-# plt.plot(MC.tuple_plot_x, MC.tuple_plot_y)
-# plt.legend("Monte Carlo")
-# plt.show()
+"""
+Monte Carlo
+"""
+# Initialization
+MC = MC()
+MC.run(10000)
+
+# End of simulation
+plt.plot(MC.tuple_plot_x, MC.tuple_plot_y)
+plt.legend("Monte Carlo")
+plt.show()

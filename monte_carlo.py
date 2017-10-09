@@ -9,12 +9,14 @@ EPISODE_LENGTH = 3
 class MC:
     emulator = Emulator("MC")
     tuple_plot = []
-    epsilon = 0.01
+    epsilon = 0.1
     G = {}
+    tuple_plot_x = []
+    tuple_plot_y = []
 
     def run(self, limit):
         i = 0
-        rand = random.uniform(0, 1)
+        dice = random.uniform(0, 1)
         q = {}
         sa_counter = {}
         policy = Policy()
@@ -25,12 +27,20 @@ class MC:
 
             # Generate EPISODE_LENGTH episodes
 
-            average_reward = 0
+            index_episode = 1
+            average_reward_episode = 0
+
+            # First episode
+
             s = api.randomstate()
-            api.printstate(s)
+
+            # print("index_episode: ", index_episode)
+            # api.printstate(s)
+
             hash_s = s.hash()
-            if rand > self.epsilon:
-                if policy.state_exists(s):
+
+            if dice > self.epsilon:
+                if policy.state_exists(hash_s) != -1:
                     a = policy.get_action_given_state(hash_s)[0]
                     r = policy.get_action_given_state(hash_s)[1]
                 else:
@@ -39,29 +49,37 @@ class MC:
             else:
                 a = api.ACTIONS[random.randrange(len(api.ACTIONS))]
                 r = self.emulator.simulate(s, a)[0]
-            average_reward += r
+            average_reward_episode += r
 
-            if policy.state_exists(hash_s):
+            # Update policy
+
+            if policy.state_exists(hash_s) != -1:
                 old_r = policy.get_action_given_state(hash_s)[1]
                 if r > old_r:
-                    policy.update_action_for_state(hash_s,a,r)
+                    policy.update_action_for_state(hash_s, a, r)
             else:
-                policy.insert_state_action_reward(index_policy,hash_s,a,r)
+                policy.insert_state_action(index_policy, hash_s, a, r)
                 index_policy += 1
 
-            if (hash_s, a) in sa_counter.keys():
-                sa_counter[hash_s , a] += 1
-                q[hash_s, a] = (r + sa_counter[hash_s, a] * q[hash_s, a]) / (sa_counter[hash_s, a] + 1)
-            else:
-                sa_counter[hash_s, a] = 1
-                q[hash_s, a] = r
+            # if (hash_s, a) in sa_counter.keys():
+            #     sa_counter[hash_s, a] += 1
+            #     q[hash_s, a] = (r + sa_counter[hash_s, a] * q[hash_s, a]) / (sa_counter[hash_s, a] + 1)
+            # else:
+            #     sa_counter[hash_s, a] = 1
+            #     q[hash_s, a] = r
 
-            for j in range(2, EPISODE_LENGTH):
+            # Next EPISODE_LENGTH - 1 episodes
+
+            while index_episode < EPISODE_LENGTH:
+                index_episode += 1
                 s = self.emulator.simulate(s, a)[1]
-                api.printstate(s)
+
+                # print("index_episode: ", index_episode)
+                # api.printstate(s)
+
                 hash_s = s.hash()
-                if rand > self.epsilon:
-                    if policy.state_exists(s):
+                if dice > self.epsilon:
+                    if policy.state_exists(hash_s) != -1:
                         a = policy.get_action_given_state(hash_s)[0]
                         r = policy.get_action_given_state(hash_s)[1]
                     else:
@@ -70,22 +88,27 @@ class MC:
                 else:
                     a = api.ACTIONS[random.randrange(len(api.ACTIONS))]
                     r = self.emulator.simulate(s, a)[0]
-                if policy.state_exists(hash_s):
+
+                # Update policy
+
+                if policy.state_exists(hash_s) != -1:
                     old_r = policy.get_action_given_state(hash_s)[1]
                     if r > old_r:
                         policy.update_action_for_state(hash_s, a, r)
                 else:
                     policy.insert_state_action(index_policy, hash_s, a, r)
                     index_policy += 1
-                average_reward += r
 
-                if (hash_s, a) in sa_counter.keys():
-                    sa_counter[hash_s, a] += 1
-                    q[hash_s, a] = (r + sa_counter[hash_s, a] * q[hash_s, a]) / (sa_counter[hash_s, a] + 1)
-                else:
-                    sa_counter[hash_s, a] = 1
-                    q[hash_s, a] = r
+                average_reward_episode += r
 
-            average_reward = average_reward / (EPISODE_LENGTH - 1)
+                # if (hash_s, a) in sa_counter.keys():
+                #     sa_counter[hash_s, a] += 1
+                #     q[hash_s, a] = (r + sa_counter[hash_s, a] * q[hash_s, a]) / (sa_counter[hash_s, a] + 1)
+                # else:
+                #     sa_counter[hash_s, a] = 1
+                #     q[hash_s, a] = r
+
+            average_reward_episode = average_reward_episode / (EPISODE_LENGTH - 1)
+
             self.tuple_plot_x.append(i)
-            self.tuple_plot_y.append(average_reward)
+            self.tuple_plot_y.append(average_reward_episode)

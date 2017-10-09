@@ -1,8 +1,6 @@
 from dynamic_programming import DP
 from monte_carlo import MC
 import matplotlib.pyplot as plt
-import numpy as np
-
 
 """
 Dynamic Programming
@@ -19,11 +17,11 @@ for i in range(len(policymatrix)):
 """
 Monte Carlo
 """
-# Initialization
 MC = MC()
-MC.run(10000)
+q = []
+for t in range(3,10):
+    q.append(MC.run(10, t))
 
-# End of simulation
-plt.plot(MC.tuple_plot_x, MC.tuple_plot_y)
+plt.plot(q)
 plt.legend("Monte Carlo")
 plt.show()

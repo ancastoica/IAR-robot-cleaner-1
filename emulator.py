@@ -54,13 +54,16 @@ class Emulator:
 
     def simulate(self, state, action):
         reward = 0
-        probability = 0.0
+        probability = 1.0
         newstate = state
 
         # Checks that the action exists
         api.ACTIONS.index(action)
 
         if state.robot is not None and state.mapp is not None:
+            if state.is_final_state():
+                reward += 100
+                return reward, newstate, probability
             if self.algorithm == "dynamic_programming":
 
                 # Battery check

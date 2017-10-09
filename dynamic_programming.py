@@ -88,20 +88,7 @@ class DP:
 
             # If the threshold is bigger than the difference between Vs and their predecessors, then we consider the algorithm as successful
             if self.get_infinite_norme(policy.matrix, self.values) < self.threshold:
-                average = 0
-                for i in range(len(policy.matrix)):
-                    average = average + policy.matrix[i][2]
-
-                average = average / len(policy.matrix) * -1
-                averageperf.append(average)
                 break
-            else:
-                average = 0
-                for i in range(len(policy.matrix)):
-                    average = average + policy.matrix[i][2]
 
-                average = average / len(policy.matrix) * -1
-                averageperf.append(average)
-
-        return averageperf
+        return policy.matrix
 

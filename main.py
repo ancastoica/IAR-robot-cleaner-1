@@ -9,13 +9,11 @@ Dynamic Programming
 """
 # Initialization
 DP = DP()
-averageperf = DP.run()
+policymatrix = DP.run()
 
-# End of simulation
-x = np.linspace(0, 1, len(averageperf))
-plt.plot(x * 1000, averageperf)
-plt.legend("Dynamic Programming")
-plt.show()
+print("Values in Dynamic Programming")
+for i in range(len(policymatrix)):
+    print(policymatrix[i][2])
 
 
 """

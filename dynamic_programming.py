@@ -1,10 +1,8 @@
 from emulator import Emulator
 from state import State
 from robot import Robot
-from cell import Cell
 from random import randrange
 import api
-from policy import Policy
 
 
 class DP:
@@ -45,23 +43,21 @@ class DP:
     """
     Get the infinite norm of the difference of two vectors
     """
-    def get_infinite_norme(self, policy_matrix, second_values):
-        max = 0
+    def get_infinite_norme(self, values, values_prime):
+        maxvalue = 0
         temp = 0
-        for i in range(len(policy_matrix)):
-            temp = abs(policy_matrix[i][2] - second_values[i])
-            if temp > max:
-                max = temp
+        for i in range(len(values)):
+            temp = abs(values[i] - values_prime[i])
+            if temp > maxvalue:
+                maxvalue = temp
         return max
 
     def run(self):
         # Initialization of the simulation
         self.generate_all_states()
         self.values = [0 for i in range(len(self.states))]
-        averageperf = []
+
         emulator = Emulator("dynamic_programming")
-        policy = Policy()
-        policy.init_policy(len(self.states))
         rewards = [0 for i in range(len(api.ACTIONS))]
         values = [0 for i in range(len(api.ACTIONS))]
         newstates = [0 for i in range(len(api.ACTIONS))]
@@ -69,26 +65,24 @@ class DP:
 
         while True:
             # Update the values at t-1 according to the values at t
-            for k in range(len(policy.matrix)):
-                self.values[k] = policy.matrix[k][2]
+
 
             # Go through all the states
-            for i in range(len(self.states)):
+            for state_ind in range(len(self.states)):
                 # Try each and every one of the possible actions
-                for j in range(len(api.ACTIONS)):
+                for action_ind in range(len(api.ACTIONS)):
                     # Get the rewards, states, probabilities as lists
-                    rewards[j], newstates[j], probabilities[j] = emulator.simulate(self.states[i], api.ACTIONS[j])
+                    rewards[action_ind], newstates[action_ind], probabilities[action_ind] = emulator.simulate(self.states[state_ind], api.ACTIONS[action_ind])
                     # Compute V
-                    values[j] = rewards[j] + api.DISCOUNTED_FACTOR * probabilities[j] * self.values[i]
+                    values[action_ind] = rewards[action_ind] + api.DISCOUNTED_FACTOR * probabilities[action_ind] * self.values[state_ind]
 
                 # Update the new maximum value and the attached action
                 maximum_value = max(values)
                 optimal_action = api.ACTIONS[rewards.index(maximum_value)]
-                policy.insert_state_action(i, self.states[i], optimal_action, maximum_value)
 
             # If the threshold is bigger than the difference between Vs and their predecessors, then we consider the algorithm as successful
-            if self.get_infinite_norme(policy.matrix, self.values) < self.threshold:
-                break
+            # if self.get_infinite_norme(, self.values) < self.threshold:
+            break
 
-        return policy.matrix
+        return
 

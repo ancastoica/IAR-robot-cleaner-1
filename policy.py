@@ -66,7 +66,7 @@ class Policy:
         return -1
 
     def get_action_given_state(self, state):
-        index = self.state_exists(self,state)
+        index = self.state_exists(state)
         if index == -1:
             print("State not in policy")
             return
@@ -74,7 +74,7 @@ class Policy:
             return self.matrix[index][1], self.matrix[index][2]
 
     def update_action_for_state(self, state, new_action, new_reward):
-        index = self.state_exists(self,state)
+        index = self.state_exists(state)
         if index == -1:
             print("State not in policy")
             return

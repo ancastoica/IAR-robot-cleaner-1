@@ -8,7 +8,6 @@ EPISODE_LENGTH = 3
 
 class MC:
     emulator = Emulator("MC")
-    tuple_plot = []
     epsilon = 0.1
     G = {}
     tuple_plot_x = []
@@ -17,10 +16,10 @@ class MC:
     def run(self, limit):
         i = 0
         dice = random.uniform(0, 1)
-        q = {}
-        sa_counter = {}
         policy = Policy()
         policy.init_policy(1000)
+        q = {}
+        sa_counter = {}
         index_policy = 0
         while i < limit:
             i += 1
@@ -37,7 +36,7 @@ class MC:
             # print("index_episode: ", index_episode)
             # api.printstate(s)
 
-            hash_s = s.hash()
+            hash_s = s.to_string()
 
             if dice > self.epsilon:
                 if policy.state_exists(hash_s) != -1:
@@ -77,7 +76,7 @@ class MC:
                 # print("index_episode: ", index_episode)
                 # api.printstate(s)
 
-                hash_s = s.hash()
+                hash_s = s.to_string()
                 if dice > self.epsilon:
                     if policy.state_exists(hash_s) != -1:
                         a = policy.get_action_given_state(hash_s)[0]

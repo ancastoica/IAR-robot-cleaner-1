@@ -4,21 +4,17 @@ class State:
         self.mapp = mapp
         self.base = base
 
-    def hash(self):
-        info = []
-        info.append(self.base)
+    def to_string(self):
+        text = ""
         for i in range(len(self.mapp)):
             for j in range(len(self.mapp[i])):
                 cell = self.mapp[i][j]
-                info.append(cell.x)
-                info.append(cell.y)
-                info.append(cell.dirty)
-                info.append(cell.home)
-        info.append(self.robot.battery)
-        info.append(self.robot.x)
-        info.append(self.robot.y)
-        info.append(self.robot.orientation)
-        full_text = ""
-        for c in info:
-            full_text += str(c)
-        return full_text
+                text += str(cell.dirty)
+                text += str(cell.home)
+        text += str(self.base[0])
+        text += str(self.base[1])
+        text += str(self.robot.battery)
+        text += str(self.robot.x)
+        text += str(self.robot.y)
+        text += str(self.robot.orientation)
+        return text

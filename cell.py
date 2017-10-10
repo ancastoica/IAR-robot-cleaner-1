@@ -7,3 +7,11 @@ class Cell:
 
     def clean(self):
         self.dirty = 0
+
+    def to_string(self):
+        text = ""
+        text += str(self.x)
+        text += str(self.y)
+        text += str(self.dirty)
+        text += str(self.home)
+        return text

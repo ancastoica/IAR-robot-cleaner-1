@@ -9,7 +9,6 @@ class MC:
     alpha = 0.1
     gamma = 0.99
     Q_function = {}
-    all_states = {}
 
     def argmax_q_function(self, state):
         """
@@ -42,7 +41,6 @@ class MC:
 
         s = api.INITIAL_STATE
         id_s = s.to_string()
-        self.all_states.update({id_s: api.get_state(id_s)})
 
         # epsilon-greedy choice of a0
 
@@ -63,7 +61,6 @@ class MC:
             index_episode += 1
             s = self.emulator.simulate(s, a)[1]
             id_s = s.to_string()
-            self.all_states.update({id_s: api.get_state(id_s)})
 
             # epsilon-greedy choice of a0
 
@@ -88,7 +85,7 @@ class MC:
         """
         i = 0
         G = {}
-        self.Q_function = {}
+        # self.Q_function = {}
 
         while i < limit:
             i += 1

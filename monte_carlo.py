@@ -10,55 +10,23 @@ import api
 
 class MC:
     emulator = Emulator("MC")
-    epsilon = 0.1
+    epsilon = 0.3
     alpha = 0.1
     gamma = 0.99
     Q_function = {}
 
-    def all_states(self):
-        """
-        Generate all possible states
-        :return: Dictionnary of all states with their unique id as key
-        """
-        all_s = {}
-        all_maps = [np.reshape(np.array(i), (api.MAPSIZE, api.MAPSIZE)) for i in itertools.product([0, 1], repeat=api.MAPSIZE * api.MAPSIZE)]
-        for basex in range(api.MAPSIZE):
-            for basey in range(api.MAPSIZE):
-                for m in all_maps:
-                    mapp = [[Cell(0, 0) for j in range(api.MAPSIZE)] for i in range(api.MAPSIZE)]
-                    for i in range(len(m)):
-                        for j in range(len(m[i])):
-                            if i == basex and j == basey:
-                                mapp[i][j] = Cell(i, j, m[i][j], 1)
-                            else:
-                                mapp[i][j] = Cell(i, j, m[i][j])
-                            for battery in range(80, 100):
-                                for robot_x in range(api.MAPSIZE):
-                                    for robot_y in range(api.MAPSIZE):
-                                        for robot_orientation in range(0, 4):
-                                            robot = Robot(robot_x, robot_y, api.MAPSIZE, api.MAPSIZE, robot_orientation, battery)
-                                            state = State(robot, mapp, (basex, basey))
-                                            id_state = state.to_string()
-                                            all_s[id_state] = state
-        return all_s
-
-    def init_q_fuction(self):
-        """
-        Initialize Q(s,a) = 0 for all pairs (s,a)
-        """
-        all_s = self.all_states()
-        for a in api.ACTIONS:
-            for s in all_s.keys():
-                self.Q_function[(s, a)] = 0
-
     def argmax_q_function(self, state):
         """
         Calculate argmax(a) of Q(s, a)
-        :return: a ( the action that maximizez G(s,a) ), max_q (the maximal value)
+        :return: a ( the action that maximizez Q(s,a) ), max_q (the maximal value)
         """
         a = api.ACTIONS[0]
+        if (state, a) not in self.Q_function.keys():
+            self.Q_function[(state, a)] = 0
         max_q = self.Q_function[(state, a)]
         for action in api.ACTIONS:
+            if (state, action) not in self.Q_function.keys():
+                self.Q_function[(state, action)] = 0
             if self.Q_function[(state, action)] > max_q:
                 max_q = self.Q_function[(state, action)]
                 a = action
@@ -72,12 +40,14 @@ class MC:
         """
 
         episode = []
-        index_episode = 1
+        index_episode = 0
 
         # (s0, a0, r0) generation
 
         s = api.INITIAL_STATE
         id_s = s.to_string()
+
+        # api.printstate(s)
 
         # epsilon-greedy choice of a0
 
@@ -88,6 +58,8 @@ class MC:
             a = api.ACTIONS[random.randrange(len(api.ACTIONS))]
 
         r = self.emulator.simulate(s, a)[0]
+
+        # print(id_s, a, r)
         episode.append([id_s, a, r])
 
         # Generation of the nex length-1 sequences
@@ -107,6 +79,8 @@ class MC:
                 a = api.ACTIONS[random.randrange(len(api.ACTIONS))]
 
             r = self.emulator.simulate(s, a)[0]
+
+            # print(id_s, a, r)
             episode.append([id_s, a, r])
         return episode
 
@@ -119,7 +93,7 @@ class MC:
         """
         i = 0
         G = {}
-        self.init_q_fuction()
+        self.Q_function = {}
 
         while i < limit:
             i += 1
@@ -128,5 +102,8 @@ class MC:
                 G[t] = 0
                 for k in range(t, T):
                     G[t] += pow(self.gamma, t-k) * episode[k][2]
-                self.Q_function[(episode[t][0], episode[t][1])] = self.Q_function[(episode[t][0], episode[t][1])] + self.alpha * (G[t] - self.Q_function[(episode[t][0], episode[t][1])])
+                if (episode[t][0], episode[t][1]) in self.Q_function.keys():
+                    self.Q_function[(episode[t][0], episode[t][1])] = self.Q_function[(episode[t][0], episode[t][1])] + self.alpha * (G[t] - self.Q_function[(episode[t][0], episode[t][1])])
+                else:
+                    self.Q_function[(episode[t][0], episode[t][1])] = self.alpha * G[t]
         return self.argmax_q_function(api.INITIAL_STATE.to_string())[1]

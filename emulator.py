@@ -61,9 +61,12 @@ class Emulator:
         api.ACTIONS.index(action)
 
         if state.robot is not None and state.mapp is not None:
+            # api.printstate(state)
+
             if state.is_final_state():
                 reward += 100
                 return reward, newstate, probability
+
             if self.algorithm == "dynamic_programming":
 
                 # Battery check
@@ -149,9 +152,97 @@ class Emulator:
                     newstate.mapp[state.robot.x][state.robot.y].clean()
                     newstate.robot.lower_battery()
 
+                return reward, newstate, probability
+
+            elif self.algorithm == "MC":
+
+                # Battery check
+                if state.robot.battery == 0:
+                    reward += self.empty_battery.get(action)[0]
+                    probability *= self.empty_battery.get(action)[1]
+                elif state.robot.battery <= 10:
+                    reward += self.critical_battery.get(action)[0]
+                    probability *= self.critical_battery.get(action)[1]
+                elif state.robot.battery >= 10:
+                    reward += self.sufficient_battery.get(action)[0]
+                    probability *= self.sufficient_battery.get(action)[1]
+
+                # Position check
+                if state.robot.orientation == 0:
+                    if state.robot.x == 0:
+                        reward += self.left_wall.get(action)[0]
+                        probability *= self.left_wall.get(action)[1]
+                    if state.robot.y == 0:
+                        reward += self.front_wall.get(action)[0]
+                        probability *= self.front_wall.get(action)[1]
+                    if state.robot.x == api.MAPSIZE - 1:
+                        reward += self.right_wall.get(action)[0]
+                        probability *= self.right_wall.get(action)[1]
+
+                elif state.robot.orientation == 1:
+                    if state.robot.y == 0:
+                        reward += self.left_wall.get(action)[0]
+                        probability *= self.left_wall.get(action)[1]
+                    if state.robot.x == api.MAPSIZE - 1:
+                        reward += self.front_wall.get(action)[0]
+                        probability *= self.front_wall.get(action)[1]
+                    if state.robot.y == api.MAPSIZE - 1:
+                        reward += self.right_wall.get(action)[0]
+                        probability *= self.right_wall.get(action)[1]
+
+                elif state.robot.orientation == 2:
+                    if state.robot.x == api.MAPSIZE - 1:
+                        reward += self.left_wall.get(action)[0]
+                        probability *= self.left_wall.get(action)[1]
+                    if state.robot.y == api.MAPSIZE - 1:
+                        reward += self.front_wall.get(action)[0]
+                        probability *= self.front_wall.get(action)[1]
+                    if state.robot.x == 0:
+                        reward += self.right_wall.get(action)[0]
+                        probability *= self.right_wall.get(action)[1]
+
+                elif state.robot.orientation == 3:
+                    if state.robot.y == api.MAPSIZE - 1:
+                        reward += self.left_wall.get(action)[0]
+                        probability *= self.left_wall.get(action)[1]
+                    if state.robot.x == 0:
+                        reward += self.front_wall.get(action)[0]
+                        probability *= self.front_wall.get(action)[1]
+                    if state.robot.y == 0:
+                        reward += self.right_wall.get(action)[0]
+                        probability *= self.right_wall.get(action)[1]
+
+                # Dirtiness check
+                if newstate.mapp[state.robot.x][state.robot.y].dirty == 0:
+                    reward += self.clean_cell.get(action)[0]
+                    probability *= self.clean_cell.get(action)[1]
+                elif newstate.mapp[state.robot.x][state.robot.y].dirty == 1:
+                    reward += self.dirty_cell.get(action)[0]
+                    probability *= self.dirty_cell.get(action)[1]
+
+                # Probability computation and robot parameters update
+                if action == "go_forward_vacuuming":
+                    dice = randrange(1, 100)
+                    if dice <= probability * 100:
+                        newstate.robot.go_forward()
+                    newstate.mapp[state.robot.x][state.robot.y].clean()
+                    newstate.robot.lower_battery()
+                elif action == "go_forward_no_vacuuming":
+                    dice = randrange(1, 100)
+                    if dice <= probability * 100:
+                        newstate.robot.go_forward()
+                elif action == "rotate_right":
+                    newstate.robot.rotate_right()
+                elif action == "rotate_left":
+                    newstate.robot.rotate_left()
+                elif action == "vacuum":
+                    newstate.mapp[state.robot.x][state.robot.y].clean()
+                    newstate.robot.lower_battery()
+
+                return reward, newstate, probability
         else:
             print("Unrecognized state in function simulate")
             return
 
-        return reward, newstate, probability
+
 

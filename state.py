@@ -28,8 +28,8 @@ class State:
                 text += str(cell.home)
         text += str(self.base[0])
         text += str(self.base[1])
-        text += str(self.robot.battery)
         text += str(self.robot.x)
         text += str(self.robot.y)
         text += str(self.robot.orientation)
+        text += str(self.robot.battery)
         return text

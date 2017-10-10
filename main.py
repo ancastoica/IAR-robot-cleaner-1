@@ -5,17 +5,6 @@ import matplotlib.pyplot as plt
 import api
 
 """
-Tests
-"""
-# state = api.INITIAL_STATE
-# api.printstate(state)
-# action = "go_forward_vacuuming"
-# emulator = Emulator("MC")
-# (r,s,p) = emulator.simulate(state, action)
-# api.printstate(s)
-# print(r)
-
-"""
 Dynamic Programming
 """
 # Initialization
@@ -33,7 +22,8 @@ MC = MC()
 q = []
 
 for t in range(10, 100):
-    v = MC.run(1000, t)
+    v = MC.run(1000000, t)
+    print(v)
     q.append(v)
 
 plt.plot(q)

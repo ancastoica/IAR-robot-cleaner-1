@@ -1,9 +1,4 @@
 from emulator import Emulator
-from state import State
-from robot import Robot
-from cell import Cell
-import numpy as np
-import itertools
 import random
 import api
 
@@ -14,13 +9,14 @@ class MC:
     alpha = 0.1
     gamma = 0.99
     Q_function = {}
+    all_states = {}
 
     def argmax_q_function(self, state):
         """
         Calculate argmax(a) of Q(s, a)
         :return: a ( the action that maximizez Q(s,a) ), max_q (the maximal value)
         """
-        a = api.ACTIONS[0]
+        a = api.ACTIONS[random.randrange(len(api.ACTIONS))]
         if (state, a) not in self.Q_function.keys():
             self.Q_function[(state, a)] = 0
         max_q = self.Q_function[(state, a)]
@@ -46,8 +42,7 @@ class MC:
 
         s = api.INITIAL_STATE
         id_s = s.to_string()
-
-        # api.printstate(s)
+        self.all_states.update({id_s: api.get_state(id_s)})
 
         # epsilon-greedy choice of a0
 
@@ -65,10 +60,10 @@ class MC:
         # Generation of the nex length-1 sequences
 
         while index_episode < length:
-            id_s = ""
             index_episode += 1
             s = self.emulator.simulate(s, a)[1]
             id_s = s.to_string()
+            self.all_states.update({id_s: api.get_state(id_s)})
 
             # epsilon-greedy choice of a0
 

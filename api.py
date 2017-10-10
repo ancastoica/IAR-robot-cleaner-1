@@ -70,3 +70,29 @@ def randomstate():
     )
 
     return rstate
+
+
+def get_state(text):
+    index = 0
+    robot = Robot(0, 0, MAPSIZE, MAPSIZE, 0, 0)
+    mapp = [[Cell(0, 0) for j in range(MAPSIZE)] for i in range(MAPSIZE)]
+    for i in range(len(mapp)):
+        for j in range(len(mapp[i])):
+            mapp[i][j].set(i, j, int(text[index]), int(text[index+1]))
+            index += 2
+    index += 1
+    base = (int(text[index-1]), int(text[index]))
+
+    index += 1
+    robot.x = int(text[index])
+
+    index += 1
+    robot.y = int(text[index])
+
+    index += 1
+    robot.orientation = int(text[index])
+
+    index += 1
+    robot.battery = int(text[index:])
+
+    return State(robot, mapp, base)

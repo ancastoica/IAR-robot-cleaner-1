@@ -138,8 +138,8 @@ class Emulator:
                     dice = randrange(1, 100)
                     if dice <= probability * 100:
                         newstate.robot.go_forward()
-                    newstate.mapp[state.robot.x][state.robot.y].clean()
-                    newstate.robot.lower_battery()
+                        newstate.mapp[state.robot.x][state.robot.y].clean()
+                        newstate.robot.lower_battery()
                 elif action == "go_forward_no_vacuuming":
                     dice = randrange(1, 100)
                     if dice <= probability * 100:
@@ -225,8 +225,8 @@ class Emulator:
                     dice = randrange(1, 100)
                     if dice <= probability * 100:
                         newstate.robot.go_forward()
-                    newstate.mapp[state.robot.x][state.robot.y].clean()
-                    newstate.robot.lower_battery()
+                        newstate.mapp[state.robot.x][state.robot.y].clean()
+                        newstate.robot.lower_battery()
                 elif action == "go_forward_no_vacuuming":
                     dice = randrange(1, 100)
                     if dice <= probability * 100:

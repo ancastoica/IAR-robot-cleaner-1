@@ -5,6 +5,12 @@ class Cell:
         self.dirty = dirty
         self.home = home
 
+    def set(self, x, y, dirty, home):
+        self.x = x
+        self.y = y
+        self.dirty = dirty
+        self.home = home
+
     def clean(self):
         self.dirty = 0
 

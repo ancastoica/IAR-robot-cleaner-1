@@ -4,16 +4,13 @@ from emulator import Emulator
 import matplotlib.pyplot as plt
 import api
 
-# """
-# Dynamic Programming
-# """
-# # Initialization
-# DP = DP()
-# policymatrix = DP.run()
-#
-# print("Values in Dynamic Programming")
-# for i in range(len(policymatrix)):
-#     print(policymatrix[i][2])
+
+"""
+Dynamic Programming
+"""
+# Initialization
+DP = DP()
+policymatrix = DP.run()
 
 """
 Monte Carlo

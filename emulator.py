@@ -56,6 +56,7 @@ class Emulator:
         reward = 0
         probability = 1.0
         newstate = state
+        newstate2 = state
 
         # Checks that the action exists
         api.ACTIONS.index(action)
@@ -135,15 +136,17 @@ class Emulator:
 
                 # Probability computation and robot parameters update
                 if action == "go_forward_vacuuming":
-                    dice = randrange(1, 100)
-                    if dice <= probability * 100:
-                        newstate.robot.go_forward()
-                        newstate.mapp[state.robot.x][state.robot.y].clean()
-                        newstate.robot.lower_battery()
+                    newstate2 = newstate
+                    newstate.robot.go_forward()
+                    newstate.mapp[state.robot.x][state.robot.y].clean()
+                    newstate2.mapp[state.robot.x][state.robot.y].clean()
+                    newstate.robot.lower_battery()
+                    newstate2.robot.lower_battery()
                 elif action == "go_forward_no_vacuuming":
-                    dice = randrange(1, 100)
-                    if dice <= probability * 100:
-                        newstate.robot.go_forward()
+                    newstate2 = newstate
+                    newstate.robot.go_forward()
+                    newstate.robot.lower_battery()
+                    newstate2.robot.lower_battery()
                 elif action == "rotate_right":
                     newstate.robot.rotate_right()
                 elif action == "rotate_left":
@@ -152,7 +155,7 @@ class Emulator:
                     newstate.mapp[state.robot.x][state.robot.y].clean()
                     newstate.robot.lower_battery()
 
-                return reward, newstate, probability
+                return reward, [newstate, newstate2], probability
 
             elif self.algorithm == "MC":
 

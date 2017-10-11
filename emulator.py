@@ -56,12 +56,12 @@ class Emulator:
         reward = 0
         probability = 0.0
         newstate = state
+        newstate2 = state
 
         # Checks that the action exists
         api.ACTIONS.index(action)
 
         if state.robot is not None and state.mapp is not None:
-            if self.algorithm == "dynamic_programming":
 
                 # Battery check
                 if state.robot.battery == 0:
@@ -127,28 +127,52 @@ class Emulator:
                     reward += self.dirty_cell.get(action)[0]
                     probability *= self.dirty_cell.get(action)[1]
 
-                # Probability computation and robot parameters update
-                if action == "go_forward_vacuuming":
-                    dice = randrange(1, 100)
-                    if dice <= probability * 100:
+                if self.algorithm == "dynamic_programming":
+                    # Probability computation and robot parameters update
+                    if action == "go_forward_vacuuming":
+                        newstate2 = newstate
                         newstate.robot.go_forward()
-                    newstate.mapp[state.robot.x][state.robot.y].clean()
-                    newstate.robot.lower_battery()
-                elif action == "go_forward_no_vacuuming":
-                    dice = randrange(1, 100)
-                    if dice <= probability * 100:
+                        newstate.mapp[state.robot.x][state.robot.y].clean()
+                        newstate2.mapp[state.robot.x][state.robot.y].clean()
+                        newstate.robot.lower_battery()
+                        newstate2.robot.lower_battery()
+                    elif action == "go_forward_no_vacuuming":
+                        newstate2 = newstate
                         newstate.robot.go_forward()
-                elif action == "rotate_right":
-                    newstate.robot.rotate_right()
-                elif action == "rotate_left":
-                    newstate.robot.rotate_left()
-                elif action == "vacuum":
-                    newstate.mapp[state.robot.x][state.robot.y].clean()
-                    newstate.robot.lower_battery()
+                        newstate.robot.lower_battery()
+                        newstate2.robot.lower_battery()
+                    elif action == "rotate_right":
+                        newstate.robot.rotate_right()
+                    elif action == "rotate_left":
+                        newstate.robot.rotate_left()
+                    elif action == "vacuum":
+                        newstate.mapp[state.robot.x][state.robot.y].clean()
+                        newstate.robot.lower_battery()
+
+                    return reward, [newstate, newstate2], probability
+                else:
+                    # Probability computation and robot parameters update
+                    if action == "go_forward_vacuuming":
+                        dice = randrange(1, 100)
+                        if dice <= probability * 100:
+                            newstate.robot.go_forward()
+                        newstate.mapp[state.robot.x][state.robot.y].clean()
+                        newstate.robot.lower_battery()
+                    elif action == "go_forward_no_vacuuming":
+                        dice = randrange(1, 100)
+                        if dice <= probability * 100:
+                            newstate.robot.go_forward()
+                    elif action == "rotate_right":
+                        newstate.robot.rotate_right()
+                    elif action == "rotate_left":
+                        newstate.robot.rotate_left()
+                    elif action == "vacuum":
+                        newstate.mapp[state.robot.x][state.robot.y].clean()
+                        newstate.robot.lower_battery()
+
+                    return reward, newstate, probability
 
         else:
             print("Unrecognized state in function simulate")
             return
-
-        return reward, newstate, probability
 

@@ -11,13 +11,9 @@ Dynamic Programming
 DP = DP()
 policymatrix = DP.run()
 
-print("Values in Dynamic Programming")
-for i in range(len(policymatrix)):
-    print(policymatrix[i][2])
-
-
 """
 Monte Carlo
+"""
 """
 # Initialization
 MC = MC()
@@ -27,3 +23,4 @@ MC.run(10000)
 plt.plot(MC.tuple_plot_x, MC.tuple_plot_y)
 plt.legend("Monte Carlo")
 plt.show()
+"""

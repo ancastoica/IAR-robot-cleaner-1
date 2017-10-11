@@ -10,7 +10,8 @@ Dynamic Programming
 """
 # Initialization
 DP = DP()
-policymatrix = DP.run()
+v_s0 = DP.run()
+print("The performance of Dynamic Programming is : ", v_s0)
 
 """
 Monte Carlo

@@ -4,7 +4,7 @@ from random import randrange
 from cell import Cell
 
 MAPSIZE = 3     # The size of the map knowing that it is a square
-ACTIONS = ["go_forward_vacuuming", "go_forward_no_vacuuming", "rotate_left", "rotate_right", "vacuum"]      # List of possible actions
+ACTIONS = ["go_forward_vacuuming", "go_forward_no_vacuuming", "rotate_left", "rotate_right", "vacuum", "recharge"]      # List of possible actions
 DISCOUNTED_FACTOR = 0.01    # The factor used to make the series converge
 INITIAL_MAP = [[Cell(0, 0, 0, 1), Cell(0, 1, 1, 0), Cell(0, 2, 0, 0)], [Cell(1, 0, 1, 0), Cell(1, 1, 0, 0), Cell(1, 2, 1, 0)], [Cell(2, 0, 0, 0), Cell(2, 1, 1, 0), Cell(2, 2, 0, 0)]]
 # Initial map

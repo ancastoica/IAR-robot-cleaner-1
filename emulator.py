@@ -135,7 +135,14 @@ class Emulator:
             if self.algorithm == "DP":
 
                 # Probability computation and robot parameters update
-                if action == "go_forward_vacuuming":
+                if action == "recharge":
+                    if state.robot.x == state.base[0] and state.robot.y == state.base[1]:
+                        newstate.robot.battery = 100
+                        newstate2 = newstate
+                        reward += 10
+                    else:
+                        reward = reward - 10
+                elif action == "go_forward_vacuuming":
                     newstate2 = newstate
                     newstate.robot.go_forward()
                     newstate.mapp[state.robot.x][state.robot.y].clean()
@@ -160,7 +167,13 @@ class Emulator:
             elif self.algorithm == "MC":
 
                 # Probability computation and robot parameters update
-                if action == "go_forward_vacuuming":
+                if action == "recharge":
+                    if state.robot.x == state.base[0] and state.robot.y == state.base[1]:
+                        newstate.robot.battery = 100
+                        reward += 10
+                    else:
+                        reward = reward - 10
+                elif action == "go_forward_vacuuming":
                     dice = randrange(1, 100)
                     if dice <= probability * 100:
                         newstate.robot.go_forward()

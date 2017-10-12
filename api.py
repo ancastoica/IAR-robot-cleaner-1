@@ -41,6 +41,13 @@ def printstate(state):
     printmap(state.mapp)
 
 
+def initmap(base_x=0, base_y=0):
+    mapp = [[Cell(0, 0, 0, 0) for j in range(MAPSIZE)] for i in range(MAPSIZE)]
+    mapp[base_x][base_y] = Cell(base_x, base_y, 0, 1)
+
+    return mapp
+
+
 """
 Creates a random map given the position of the homebase
 """
@@ -55,6 +62,9 @@ def randommap(basex, basey):
                 mapp[i][j] = Cell(i, j, randrange(2))
     return mapp
 
+
+def resetvector(vector):
+    return [0.0 for i in range(len(vector))]
 
 """
 Creates a random states with random robot and map

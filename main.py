@@ -14,6 +14,8 @@ policymatrix = DP.run()
 print("Values in Dynamic Programming")
 for i in range(len(policymatrix)):
     print(policymatrix[i][2])
+v_s0 = DP.run()
+print("The performance of Dynamic Programming is : ", v_s0)
 
 """
 Monte Carlo

@@ -45,7 +45,7 @@ class DP:
         robot = Robot(robot_x, robot_y, api.MAPSIZE, api.MAPSIZE, robot_orientation, abs_battery)
 
         for maps_ind in range(len(all_maps)):
-            if all_maps[maps_ind][base_x][base_y] == 0 and np.matrix(all_maps[maps_ind]).sum() <= 4:
+            if all_maps[maps_ind][base_x][base_y] == 0:
                 for x in range(api.MAPSIZE):
                     for y in range(api.MAPSIZE):
                         if x == base_x and y == base_y:
@@ -117,6 +117,7 @@ class DP:
             # Update the values at t-1 according to the values at t
             values_prime = deepcopy(self.values[:])
             # Go through all the states
+            print(len(self.states))
             for state_ind in range(len(self.states)):
 
                 # Update the new maximum value

@@ -3,6 +3,8 @@ from state import State
 from robot import Robot
 from random import randrange
 from cell import Cell
+import numpy as np
+import itertools
 import api
 
 
@@ -32,8 +34,9 @@ class DP:
 
     def generate_all_map(self, battery, robot_x, robot_y, robot_orientation, base_x, base_y):
         mapp = api.initmap(base_x, base_y)
-        tempmapp = mapp
+        all_maps = [np.reshape(np.array(i), (api.MAPSIZE, api.MAPSIZE)) for i in itertools.product([0, 1], repeat=api.MAPSIZE * api.MAPSIZE)]
         abs_battery = 100
+
         if battery == 0:
             abs_battery = 0
         elif battery == 1:
@@ -43,27 +46,15 @@ class DP:
 
         robot = Robot(robot_x, robot_y, api.MAPSIZE, api.MAPSIZE, robot_orientation, abs_battery)
 
-        self.states.append(State(robot, mapp, (base_x, base_y)))
-
-        for x in range(api.MAPSIZE):
-            for y in range(api.MAPSIZE):
-                # Focus on a cell
-                if x == base_x and y == base_y:
-                    # We consider the homebase cell as clean
-                    mapp[x][y] = Cell(x, y, 0, 1)
-                else:
-                    mapp[x][y] = Cell(x, y, 1, 0)
-                tempmapp = mapp
+        for maps_ind in range(len(all_maps)):
+            for x in range(api.MAPSIZE):
+                for y in range(api.MAPSIZE):
+                    if x == base_x and y == base_y:
+                        mapp[x][y] = Cell(x, y, 0, 1)
+                    else:
+                        mapp[x][y] = Cell(x, y, all_maps[maps_ind][x][y], 0)
+            if all_maps[maps_ind][base_x][base_y] == 0:
                 self.states.append(State(robot, mapp, (base_x, base_y)))
-
-                for x_prime in range(x, api.MAPSIZE):
-                    for y_prime in range(y, api.MAPSIZE):
-                        if x_prime == base_x and y_prime == base_y:
-                            # We consider the homebase cell as clean
-                            break
-                        mapp[x_prime][y_prime] = Cell(x_prime, y_prime, 1, 0)
-                        self.states.append(State(robot, mapp, (base_x, base_y)))
-                        mapp = tempmapp
 
 
 
@@ -80,7 +71,12 @@ class DP:
                 maxvalue = temp
         return maxvalue
 
-    def get_value_function(self, emulator, state_ind):
+
+    """
+    Return the value function of a given state
+    """
+
+    def get_value_function(self, emulator, state_ind, values_prime):
         rewards = [0.0 for i in range(len(api.ACTIONS))]
         newstates = [[0.0, 0.0] for i in range(len(api.ACTIONS))]
         probabilities = [0.0 for i in range(len(api.ACTIONS))]
@@ -93,9 +89,12 @@ class DP:
             # Compute Q value
             q_values[action_ind] = rewards[action_ind]
 
-            for possible_action in range(len(newstates[action_ind])):
-                possible_ind = self.state_exists(newstates[action_ind][possible_action])
-                q_values += api.DISCOUNTED_FACTOR * probabilities[action_ind] * self.get_value_function(emulator, possible_ind)
+            if type(newstates[action_ind]) == list:
+                for possible_action in range(len(newstates[action_ind])):
+                    possible_ind = self.state_exists(newstates[action_ind][possible_action])
+                    q_values[action_ind] += api.DISCOUNTED_FACTOR * probabilities[action_ind] * values_prime[possible_ind]
+            else:
+                q_values[action_ind] += api.DISCOUNTED_FACTOR * probabilities[action_ind] * values_prime[self.state_exists(newstates[action_ind])]
 
         return max(q_values)
 
@@ -110,10 +109,11 @@ class DP:
     def run(self):
         # Initialization of the simulation
         self.generate_all_states()
+        print(len(self.states))
         self.values = [0.0 for i in range(len(self.states))]
         values_prime = [0.0 for i in range(len(self.states))]
 
-        emulator = Emulator("dynamic_programming")
+        emulator = Emulator("DP")
 
         while True:
             # Update the values at t-1 according to the values at t
@@ -122,7 +122,7 @@ class DP:
             for state_ind in range(len(self.states)):
 
                 # Update the new maximum value
-                self.values[state_ind] = self.get_value_function(emulator, state_ind)
+                self.values[state_ind] = self.get_value_function(emulator, state_ind, values_prime)
 
             # If the threshold is bigger than the difference between Vs and their predecessors, then we consider the algorithm as successful
             if self.get_infinite_norme(self.values, values_prime) < self.threshold:

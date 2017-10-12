@@ -132,7 +132,7 @@ class Emulator:
                 reward += self.dirty_cell.get(action)[0]
                 probability *= self.dirty_cell.get(action)[1]
 
-            if self.algorithm == "dynamic_programming":
+            if self.algorithm == "DP":
 
                 # Probability computation and robot parameters update
                 if action == "go_forward_vacuuming":

@@ -23,9 +23,9 @@ Monte Carlo
 MC = MC()
 q = []
 
-for t in range(10, 100):
-    v = MC.run(1000, t)
-    print(v)
+for t in range(1, 100):
+    v = MC.run(100, t)
+    print("Value of Q_function for s0 when episode length = ", t, ": ", v)
     q.append(v)
 
 plt.plot(q)

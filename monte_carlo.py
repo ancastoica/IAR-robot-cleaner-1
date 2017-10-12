@@ -1,6 +1,7 @@
 from emulator import Emulator
 import random
 import api
+import copy
 
 
 class MC:
@@ -39,7 +40,7 @@ class MC:
 
         # (s0, a0, r0) generation
 
-        s = api.INITIAL_STATE
+        s = copy.deepcopy(api.INITIAL_STATE)
         id_s = s.to_string()
 
         # epsilon-greedy choice of a0
@@ -52,14 +53,15 @@ class MC:
 
         r = self.emulator.simulate(s, a)[0]
 
-        # print(id_s, a, r)
+        print(id_s, a, r)
+        api.printstate(s)
         episode.append([id_s, a, r])
 
         # Generation of the nex length-1 sequences
 
         while index_episode < length:
             index_episode += 1
-            s = self.emulator.simulate(s, a)[1]
+            s = copy.deepcopy(self.emulator.simulate(s, a)[1])
             if s.robot.battery <= 0 or s.is_final_state():
                 break
             id_s = s.to_string()
@@ -74,7 +76,8 @@ class MC:
 
             r = self.emulator.simulate(s, a)[0]
 
-            # print(id_s, a, r)
+            print(id_s, a, r)
+            api.printstate(s)
             episode.append([id_s, a, r])
         return episode
 
@@ -87,14 +90,16 @@ class MC:
         """
         i = 0
         G = {}
-        # self.Q_function = {}
+        self.Q_function = {}
 
         while i < limit:
             i += 1
+            print("--------------------- New Episode ------------------------")
             episode = self.generate_episode(T)
-            for t in range(0, T):
+            ep_length = len(episode)
+            for t in range(0, ep_length):
                 G[t] = 0
-                for k in range(t, T):
+                for k in range(t, ep_length):
                     G[t] += pow(self.gamma, t-k) * episode[k][2]
                 if (episode[t][0], episode[t][1]) in self.Q_function.keys():
                     self.Q_function[(episode[t][0], episode[t][1])] = self.Q_function[(episode[t][0], episode[t][1])] + self.alpha * (G[t] - self.Q_function[(episode[t][0], episode[t][1])])

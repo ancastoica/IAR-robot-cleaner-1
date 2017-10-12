@@ -76,7 +76,7 @@ class DP:
     Return the value function of a given state
     """
 
-    def get_value_function(self, emulator, state_ind, values_prime):
+    def get_value_function(self, emulator, state_ind):
         rewards = [0.0 for i in range(len(api.ACTIONS))]
         newstates = [[0.0, 0.0] for i in range(len(api.ACTIONS))]
         probabilities = [0.0 for i in range(len(api.ACTIONS))]
@@ -92,9 +92,9 @@ class DP:
             if type(newstates[action_ind]) == list:
                 for possible_action in range(len(newstates[action_ind])):
                     possible_ind = self.state_exists(newstates[action_ind][possible_action])
-                    q_values[action_ind] += api.DISCOUNTED_FACTOR * probabilities[action_ind] * values_prime[possible_ind]
+                    q_values[action_ind] += api.DISCOUNTED_FACTOR * probabilities[action_ind] * self.values[possible_ind]
             else:
-                q_values[action_ind] += api.DISCOUNTED_FACTOR * probabilities[action_ind] * values_prime[self.state_exists(newstates[action_ind])]
+                q_values[action_ind] += api.DISCOUNTED_FACTOR * probabilities[action_ind] * self.values[self.state_exists(newstates[action_ind])]
 
         return max(q_values)
 
@@ -109,7 +109,6 @@ class DP:
     def run(self):
         # Initialization of the simulation
         self.generate_all_states()
-        print(len(self.states))
         self.values = [0.0 for i in range(len(self.states))]
         values_prime = [0.0 for i in range(len(self.states))]
 
@@ -122,8 +121,7 @@ class DP:
             for state_ind in range(len(self.states)):
 
                 # Update the new maximum value
-                self.values[state_ind] = self.get_value_function(emulator, state_ind, values_prime)
-
+                self.values[state_ind] = self.get_value_function(emulator, state_ind)
             # If the threshold is bigger than the difference between Vs and their predecessors, then we consider the algorithm as successful
             if self.get_infinite_norme(self.values, values_prime) < self.threshold:
                 break

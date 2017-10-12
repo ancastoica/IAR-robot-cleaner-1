@@ -23,7 +23,7 @@ elif algorithm_choice == "MC" or algorithm_choice == "mc":
     MC = MC()
     q = []
 
-    for t in range(5, 100):
+    for t in range(3, 100):
         v = MC.run(100, t)
         q.append(v)
 
@@ -49,7 +49,7 @@ elif algorithm_choice == "all":
     MC = MC()
     q = []
 
-    for t in range(5, 100):
+    for t in range(3, 100):
         v = MC.run(100, t)
         print(v)
         q.append(v)

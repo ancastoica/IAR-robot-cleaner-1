@@ -7,7 +7,7 @@ import copy
 class MC:
     emulator = Emulator("MC")
     epsilon = 0.1
-    alpha = 0.01
+    alpha = 0.001
     gamma = 0.99
     Q_function = {}
 
@@ -53,8 +53,8 @@ class MC:
 
         r = self.emulator.simulate(s, a)[0]
 
-        print(id_s, a, r)
-        api.printstate(s)
+        # print(id_s, a, r)
+        # api.printstate(s)
         episode.append([id_s, a, r])
 
         # Generation of the nex length-1 sequences
@@ -76,8 +76,8 @@ class MC:
 
             r = self.emulator.simulate(s, a)[0]
 
-            print(id_s, a, r)
-            api.printstate(s)
+            # print(id_s, a, r)
+            # api.printstate(s)
             episode.append([id_s, a, r])
         return episode
 
@@ -94,7 +94,6 @@ class MC:
 
         while i < limit:
             i += 1
-            print("--------------------- New Episode ------------------------")
             episode = self.generate_episode(T)
             ep_length = len(episode)
             for t in range(0, ep_length):

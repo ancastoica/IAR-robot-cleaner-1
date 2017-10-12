@@ -11,42 +11,50 @@ class Emulator:
                               "go_forward_no_vacuuming": ((-100 + -1), 0.0),
                               "rotate_left": ((-100 + -1), 0.0),
                               "rotate_right": ((-100 + -1), 0.0),
-                              "vacuum": ((-100 + -1), 0.0)}
+                              "vacuum": ((-100 + -1), 0.0),
+                              "recharge": (0, 1.0)}
         self.critical_battery = {"go_forward_vacuuming": ((-3 + -1), 1.0),
                                  "go_forward_no_vacuuming": ((0 + -1), 1.0),
                                  "rotate_left": ((0 + -1), 1.0),
                                  "rotate_right": ((0 + -1), 1.0),
-                                 "vacuum": ((-5 + -1), 1.0)}
+                                 "vacuum": ((-5 + -1), 1.0),
+                                 "recharge": (0, 1.0)}
         self.sufficient_battery = {"go_forward_vacuuming": ((0 + -1), 1.0),
                                    "go_forward_no_vacuuming": ((0 + -1), 1.0),
                                    "rotate_left": ((0 + -1), 1.0),
                                    "rotate_right": ((0 + -1), 1.0),
-                                   "vacuum": ((0 + -1), 1.0)}
+                                   "vacuum": ((0 + -1), 1.0),
+                                   "recharge": (0, 1.0)}
         self.front_wall = {"go_forward_vacuuming": (-10, 0.0),
                            "go_forward_no_vacuuming": (-10, 0.0),
                            "rotate_left": (10, 1.0),
                            "rotate_right": (10, 1.0),
-                           "vacuum": (0, 1.0)}
+                           "vacuum": (0, 1.0),
+                           "recharge": (0, 1.0)}
         self.right_wall = {"go_forward_vacuuming": (0, 1.0),
                            "go_forward_no_vacuuming": (0, 1.0),
                            "rotate_left": (0, 1.0),
                            "rotate_right": (-10, 1.0),
-                           "vacuum": (0, 1.0)}
+                           "vacuum": (0, 1.0),
+                           "recharge": (0, 1.0)}
         self.left_wall = {"go_forward_vacuuming": (0, 1.0),
                           "go_forward_no_vacuuming": (0, 1.0),
                           "rotate_left": (-10, 1.0),
                           "rotate_right": (0, 1.0),
-                          "vacuum": (0, 1.0)}
+                          "vacuum": (0, 1.0),
+                          "recharge": (0, 1.0)}
         self.dirty_cell = {"go_forward_vacuuming": (40, 0.9),
                            "go_forward_no_vacuuming": (-40, 0.8),
                            "rotate_left": (0, 1.0),
                            "rotate_right": (0, 1.0),
-                           "vacuum": (40, 1.0)}
+                           "vacuum": (40, 1.0),
+                           "recharge": (0, 1.0)}
         self.clean_cell = {"go_forward_vacuuming": (-10, 0.9),
                            "go_forward_no_vacuuming": (5, 0.9),
                            "rotate_left": (0, 1.0),
                            "rotate_right": (0, 1.0),
-                           "vacuum": (-10, 1.0)}
+                           "vacuum": (-10, 1.0),
+                           "recharge": (0, 1.0)}
 
     """
     Simulate the model according to the algorithm we're using
@@ -135,7 +143,14 @@ class Emulator:
             if self.algorithm == "DP":
 
                 # Probability computation and robot parameters update
-                if action == "go_forward_vacuuming":
+                if action == "recharge":
+                    if state.robot.x == state.base[0] and state.robot.y == state.base[1]:
+                        newstate.robot.battery = 100
+                        newstate2 = newstate
+                        reward += 10
+                    else:
+                        reward = reward - 10
+                elif action == "go_forward_vacuuming":
                     newstate2 = newstate
                     newstate.robot.go_forward()
                     newstate.mapp[state.robot.x][state.robot.y].clean()
@@ -160,7 +175,13 @@ class Emulator:
             elif self.algorithm == "MC":
 
                 # Probability computation and robot parameters update
-                if action == "go_forward_vacuuming":
+                if action == "recharge":
+                    if state.robot.x == state.base[0] and state.robot.y == state.base[1]:
+                        newstate.robot.battery = 100
+                        reward += 10
+                    else:
+                        reward = reward - 10
+                elif action == "go_forward_vacuuming":
                     dice = randrange(1, 100)
                     if dice <= probability * 100:
                         newstate.robot.go_forward()

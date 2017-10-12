@@ -60,6 +60,8 @@ class MC:
         while index_episode < length:
             index_episode += 1
             s = self.emulator.simulate(s, a)[1]
+            if s.robot.battery <= 0 or s.is_final_state():
+                break
             id_s = s.to_string()
 
             # epsilon-greedy choice of a0

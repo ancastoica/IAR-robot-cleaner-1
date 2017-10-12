@@ -107,7 +107,6 @@ class DP:
     def run(self):
         # Initialization of the simulation
         self.generate_all_states()
-        print(len(self.states))
         self.values = [0.0 for i in range(len(self.states))]
         values_prime = [0.0 for i in range(len(self.states))]
 
@@ -117,12 +116,10 @@ class DP:
             # Update the values at t-1 according to the values at t
             values_prime = deepcopy(self.values[:])
             # Go through all the states
-            print(len(self.states))
             for state_ind in range(len(self.states)):
 
                 # Update the new maximum value
                 self.values[state_ind] = self.get_value_function(emulator, state_ind)
-                print(self.values[state_ind])
             # If the threshold is bigger than the difference between Vs and their predecessors, then we consider the algorithm as successful
             if self.get_infinite_norme(self.values, values_prime) < self.threshold:
                 break

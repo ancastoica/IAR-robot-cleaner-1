@@ -8,7 +8,6 @@ import api
 algorithm_choice = ""
 while algorithm_choice != "DP" and algorithm_choice != "MC" and algorithm_choice != "QL" and algorithm_choice != "dp" and algorithm_choice != "mc" and algorithm_choice != "ql" and algorithm_choice != "all":
     algorithm_choice = str(input("Choose the algorithm to execute (DP; MC; QL; all) : "))
-    print(algorithm_choice)
 
 if algorithm_choice == "DP" or algorithm_choice == "dp":
     """

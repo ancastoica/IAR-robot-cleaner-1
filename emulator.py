@@ -1,4 +1,5 @@
 from random import randrange
+from copy import deepcopy
 import api
 
 
@@ -63,8 +64,8 @@ class Emulator:
     def simulate(self, state, action):
         reward = 0
         probability = 1.0
-        newstate = state
-        newstate2 = state
+        newstate = deepcopy(state)
+        newstate2 = deepcopy(state)
 
         # Checks that the action exists
         api.ACTIONS.index(action)
@@ -145,20 +146,23 @@ class Emulator:
                 # Probability computation and robot parameters update
                 if action == "recharge":
                     if state.robot.x == state.base[0] and state.robot.y == state.base[1]:
-                        newstate.robot.battery = 100
-                        newstate2 = newstate
-                        reward += 10
+                        if state.robot.battery == 100:
+                            reward = reward - 20
+                        else:
+                            newstate.robot.battery = 100
+                            newstate2 = deepcopy(newstate)
+                            reward += 20
                     else:
-                        reward = reward - 10
+                        reward = reward - 20
                 elif action == "go_forward_vacuuming":
-                    newstate2 = newstate
+                    newstate2 = deepcopy(newstate)
                     newstate.robot.go_forward()
                     newstate.mapp[state.robot.x][state.robot.y].clean()
                     newstate2.mapp[state.robot.x][state.robot.y].clean()
                     newstate.robot.lower_battery()
                     newstate2.robot.lower_battery()
                 elif action == "go_forward_no_vacuuming":
-                    newstate2 = newstate
+                    newstate2 = deepcopy(newstate)
                     newstate.robot.go_forward()
                     newstate.robot.lower_battery()
                     newstate2.robot.lower_battery()
@@ -177,10 +181,13 @@ class Emulator:
                 # Probability computation and robot parameters update
                 if action == "recharge":
                     if state.robot.x == state.base[0] and state.robot.y == state.base[1]:
-                        newstate.robot.battery = 100
-                        reward += 10
+                        if state.robot.battery == 100:
+                            reward = reward - 20
+                        else:
+                            newstate.robot.battery = 100
+                            reward += 20
                     else:
-                        reward = reward - 10
+                        reward = reward - 20
                 elif action == "go_forward_vacuuming":
                     dice = randrange(1, 100)
                     if dice <= probability * 100:

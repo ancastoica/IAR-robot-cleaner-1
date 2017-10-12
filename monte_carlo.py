@@ -6,8 +6,8 @@ import copy
 
 class MC:
     emulator = Emulator("MC")
-    epsilon = 0.3
-    alpha = 0.1
+    epsilon = 0.1
+    alpha = 0.01
     gamma = 0.99
     Q_function = {}
 
@@ -90,7 +90,7 @@ class MC:
         """
         i = 0
         G = {}
-        self.Q_function = {}
+        # self.Q_function = {}
 
         while i < limit:
             i += 1

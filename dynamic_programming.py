@@ -1,7 +1,7 @@
 from emulator import Emulator
 from state import State
 from robot import Robot
-from random import randrange
+from copy import deepcopy
 from cell import Cell
 import numpy as np
 import itertools
@@ -24,9 +24,7 @@ class DP:
             for robot_x in range(api.MAPSIZE):
                 for robot_y in range(api.MAPSIZE):
                     for robot_orientation in range(0, 4):
-                        for basex in range(api.MAPSIZE):
-                            for basey in range(api.MAPSIZE):
-                                self.generate_all_map(battery, robot_x, robot_y, robot_orientation, basex, basey)
+                        self.generate_all_map(battery, robot_x, robot_y, robot_orientation, 0, 0)
 
     """
     Generate a map using the given parameters
@@ -40,21 +38,21 @@ class DP:
         if battery == 0:
             abs_battery = 0
         elif battery == 1:
-            abs_battery = randrange(1, 10)
+            abs_battery = 10
         elif battery == 2:
-            abs_battery = randrange(11, 100)
+            abs_battery = 100
 
         robot = Robot(robot_x, robot_y, api.MAPSIZE, api.MAPSIZE, robot_orientation, abs_battery)
 
         for maps_ind in range(len(all_maps)):
-            for x in range(api.MAPSIZE):
-                for y in range(api.MAPSIZE):
-                    if x == base_x and y == base_y:
-                        mapp[x][y] = Cell(x, y, 0, 1)
-                    else:
-                        mapp[x][y] = Cell(x, y, all_maps[maps_ind][x][y], 0)
-            if all_maps[maps_ind][base_x][base_y] == 0:
-                self.states.append(State(robot, mapp, (base_x, base_y)))
+            if all_maps[maps_ind][base_x][base_y] == 0 and np.matrix(all_maps[maps_ind]).sum() <= 4:
+                for x in range(api.MAPSIZE):
+                    for y in range(api.MAPSIZE):
+                        if x == base_x and y == base_y:
+                            mapp[x][y] = Cell(x, y, 0, 1)
+                        else:
+                            mapp[x][y] = Cell(x, y, all_maps[maps_ind][x][y], 0)
+                self.states.append(State(robot, mapp, (base_x, base_y)).to_string())
 
 
 
@@ -85,7 +83,7 @@ class DP:
         # Try each and every one of the possible actions
         for action_ind in range(len(api.ACTIONS)):
             # Get the rewards, states, probabilities as lists
-            rewards[action_ind], newstates[action_ind], probabilities[action_ind] = emulator.simulate(self.states[state_ind], api.ACTIONS[action_ind])
+            rewards[action_ind], newstates[action_ind], probabilities[action_ind] = emulator.simulate(api.get_state(self.states[state_ind]), api.ACTIONS[action_ind])
             # Compute Q value
             q_values[action_ind] = rewards[action_ind]
 
@@ -109,6 +107,7 @@ class DP:
     def run(self):
         # Initialization of the simulation
         self.generate_all_states()
+        print(len(self.states))
         self.values = [0.0 for i in range(len(self.states))]
         values_prime = [0.0 for i in range(len(self.states))]
 
@@ -116,16 +115,19 @@ class DP:
 
         while True:
             # Update the values at t-1 according to the values at t
-            values_prime = self.values[:]
+            values_prime = deepcopy(self.values[:])
             # Go through all the states
             for state_ind in range(len(self.states)):
 
                 # Update the new maximum value
                 self.values[state_ind] = self.get_value_function(emulator, state_ind)
+                print(self.values[state_ind])
             # If the threshold is bigger than the difference between Vs and their predecessors, then we consider the algorithm as successful
             if self.get_infinite_norme(self.values, values_prime) < self.threshold:
                 break
 
-        s0_index = self.state_exists(api.INITIAL_STATE)
-
+            s0_index = self.state_exists(api.INITIAL_STATE.to_string())
+            print("s0 index:", self.state_exists(api.INITIAL_STATE.to_string()))
+            print("s0 id:", self.state_exists(api.INITIAL_STATE.to_string()))
+            print("Value: ", self.values[s0_index])
         return self.values[s0_index]

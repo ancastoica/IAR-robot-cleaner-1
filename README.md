@@ -3,7 +3,7 @@ Artificial Intelligence Project - Homework 1
 To execute the project :
 
 Execution :
-    In the main, you'll be ask to choose one of the algorithm, or the three.
+    In the main, you'll be asked to choose one of the 3 algorithms, or all three.
     >>> "Choose the algorithm to execute (DP; MC; QL; all) : "
     To get an idea of the computing time :
         - DP : ~ 5h

@@ -65,13 +65,11 @@ class Emulator:
         reward = 0
         probability = 1.0
         newstate = deepcopy(state)
-        newstate2 = deepcopy(state)
 
         # Checks that the action exists
         api.ACTIONS.index(action)
 
         if state.robot is not None and state.mapp is not None:
-            # api.printstate(state)
 
             if state.is_final_state():
                 reward += 100
@@ -142,7 +140,7 @@ class Emulator:
                 probability *= self.dirty_cell.get(action)[1]
 
             if self.algorithm == "DP":
-
+                newstate2 = deepcopy(state)
                 # Probability computation and robot parameters update
                 if action == "recharge":
                     if state.robot.x == state.base[0] and state.robot.y == state.base[1]:
@@ -150,19 +148,17 @@ class Emulator:
                             reward = reward - 20
                         else:
                             newstate.robot.battery = 100
-                            newstate2 = deepcopy(newstate)
+                            newstate2.robot.battery = 100
                             reward += 20
                     else:
                         reward = reward - 20
                 elif action == "go_forward_vacuuming":
-                    newstate2 = deepcopy(newstate)
                     newstate.robot.go_forward()
                     newstate.mapp[state.robot.x][state.robot.y].clean()
                     newstate2.mapp[state.robot.x][state.robot.y].clean()
                     newstate.robot.lower_battery()
                     newstate2.robot.lower_battery()
                 elif action == "go_forward_no_vacuuming":
-                    newstate2 = deepcopy(newstate)
                     newstate.robot.go_forward()
                     newstate.robot.lower_battery()
                     newstate2.robot.lower_battery()

@@ -35,7 +35,6 @@ class QL:
         :return: max Q(s0, a)
         """
         i = 0
-        # self.Q_function = {}
 
         s = copy.deepcopy(api.INITIAL_STATE)
         id_s = s.to_string()

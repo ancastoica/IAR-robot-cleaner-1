@@ -89,7 +89,7 @@ elif algorithm_choice == "all":
 
     plt.plot(ql, label='QL')
     plt.title("All algorithms")
-    plt.ylim([-100, 50])
+    plt.ylim([0, 50])
 
     """
     Dynamic Programming

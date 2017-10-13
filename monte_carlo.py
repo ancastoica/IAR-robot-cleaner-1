@@ -1,18 +1,17 @@
+import copy
 from emulator import Emulator
 from state import State
 from robot import Robot
 import random
 import api
-import copy
 
 
 class MC:
     emulator = Emulator("MC")
-    epsilon = 0.05
+    epsilon = 0.1
     alpha = 0.001
     gamma = 0.9
     Q_function = {}
-    counter = {}
 
     def argmax_q_function(self, state):
         """
@@ -52,21 +51,17 @@ class MC:
         if dice > self.epsilon:
             a = self.argmax_q_function(id_s)[0]
         else:
-            a = api.ACTIONS[random.randrange(len(api.ACTIONS))]
+            a = copy.copy(api.ACTIONS[random.randrange(len(api.ACTIONS))])
 
         r = self.emulator.simulate(s, a)[0]
 
-        # print(id_s, a, r)
-        # api.printstate(s)
         episode.append([id_s, a, r])
 
         # Generation of the nex length-1 sequences
 
-        while index_episode < length:
+        while index_episode < length and s.robot.battery >= 0 and not s.is_final_state():
             index_episode += 1
             s = self.emulator.simulate(s, a)[1]
-            if s.robot.battery <= 0 or s.is_final_state():
-                return episode
             id_s = s.to_string()
 
             # epsilon-greedy choice of a0
@@ -75,12 +70,10 @@ class MC:
             if dice > self.epsilon:
                 a = self.argmax_q_function(id_s)[0]
             else:
-                a = api.ACTIONS[random.randrange(len(api.ACTIONS))]
+                a = copy.copy(api.ACTIONS[random.randrange(len(api.ACTIONS))])
 
             r = self.emulator.simulate(s, a)[0]
 
-            # print(id_s, a, r)
-            # api.printstate(s)
             episode.append([id_s, a, r])
         return episode
 
@@ -93,8 +86,6 @@ class MC:
         """
         i = 0
         G = {}
-        self.Q_function = {}
-        self.counter = {}
 
         while i < limit:
             i += 1
@@ -103,13 +94,9 @@ class MC:
             for t in range(0, ep_length):
                 G[t] = 0
                 for k in range(t, ep_length):
-                    G[t] += pow(self.gamma, t-k) * episode[k][2]
-                # G[t] = G[t]/(ep_length-t)
-                if (episode[t][0], episode[t][1]) in self.Q_function.keys() and (episode[t][0], episode[t][1]) in self.counter.keys():
-                    self.counter[(episode[t][0], episode[t][1])] += 1
-                    # self.Q_function[(episode[t][0], episode[t][1])] = (self.alpha*G[t] + (self.counter[(episode[t][0], episode[t][1])] - 1) * self.Q_function[(episode[t][0], episode[t][1])])/self.counter[(episode[t][0], episode[t][1])]
+                    G[t] += episode[k][2] * (self.gamma ** k)
+                if (episode[t][0], episode[t][1]) in self.Q_function.keys():
                     self.Q_function[(episode[t][0], episode[t][1])] = self.Q_function[(episode[t][0], episode[t][1])] + self.alpha * (G[t] - self.Q_function[(episode[t][0], episode[t][1])])
                 else:
-                    self.counter[(episode[t][0], episode[t][1])] = 1
                     self.Q_function[(episode[t][0], episode[t][1])] = self.alpha * G[t]
         return self.argmax_q_function(api.INITIAL_STATE.to_string())[1]

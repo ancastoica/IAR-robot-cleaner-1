@@ -6,9 +6,9 @@ import copy
 
 class MC:
     emulator = Emulator("MC")
-    epsilon = 0.1
-    alpha = 0.001
-    gamma = 0.99
+    epsilon = 0.05
+    alpha = 0.00001
+    gamma = 0.7
     Q_function = {}
 
     def argmax_q_function(self, state):
@@ -63,7 +63,7 @@ class MC:
             index_episode += 1
             s = copy.deepcopy(self.emulator.simulate(s, a)[1])
             if s.robot.battery <= 0 or s.is_final_state():
-                break
+                return episode
             id_s = s.to_string()
 
             # epsilon-greedy choice of a0

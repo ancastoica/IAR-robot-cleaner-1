@@ -62,7 +62,6 @@ class DP:
 
     def get_infinite_norme(self, values, values_prime):
         maxvalue = 0.0
-        temp = 0.0
         for i in range(len(values)):
             temp = abs(values[i] - values_prime[i])
             if temp > maxvalue:
@@ -108,7 +107,6 @@ class DP:
         # Initialization of the simulation
         self.generate_all_states()
         self.values = [0.0 for i in range(len(self.states))]
-        values_prime = [0.0 for i in range(len(self.states))]
 
         emulator = Emulator("DP")
 
@@ -120,12 +118,13 @@ class DP:
 
                 # Update the new maximum value
                 self.values[state_ind] = self.get_value_function(emulator, state_ind)
-            # If the threshold is bigger than the difference between Vs and their predecessors, then we consider the algorithm as successful
+            # If the threshold is bigger than the difference between Vs and their predecessors
+            # then we consider the algorithm as successful
             if self.get_infinite_norme(self.values, values_prime) < self.threshold:
                 break
 
-            s0_index = self.state_exists(api.INITIAL_STATE.to_string())
-            print("s0 index:", self.state_exists(api.INITIAL_STATE.to_string()))
-            print("s0 id:", self.state_exists(api.INITIAL_STATE.to_string()))
-            print("Value: ", self.values[s0_index])
+        s0_index = self.state_exists(api.INITIAL_STATE.to_string())
+        # print("s0 index:", self.state_exists(api.INITIAL_STATE.to_string()))
+        # print("s0 id:", self.state_exists(api.INITIAL_STATE.to_string()))
+        # print("Value: ", self.values[s0_index])
         return self.values[s0_index]

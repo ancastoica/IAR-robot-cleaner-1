@@ -1,6 +1,9 @@
 from dynamic_programming import DP
 from monte_carlo import MC
+from q_learning import QL
 import matplotlib.pyplot as plt
+
+EPISODE = 20
 
 algorithm_choice = ""
 while algorithm_choice != "DP" and algorithm_choice != "MC" and algorithm_choice != "QL" and algorithm_choice != "dp" and algorithm_choice != "mc" and algorithm_choice != "ql" and algorithm_choice != "all":
@@ -27,7 +30,7 @@ elif algorithm_choice == "MC" or algorithm_choice == "mc":
     MC = MC()
     q = []
 
-    for t in range(3, 100):
+    for t in range(0, EPISODE):
         v = MC.run(100, t)
         q.append(v)
 
@@ -36,16 +39,27 @@ elif algorithm_choice == "MC" or algorithm_choice == "mc":
     plt.show()
 
 elif algorithm_choice == "QL" or algorithm_choice == "ql":
-    print("Q-Learning algorithm in construction, please wait for the developper !")
+    """
+    Q-Learning
+    """
+    QL = QL()
+    ql = []
+
+    i = 0
+    while i < EPISODE:
+        v = QL.run(i)
+        ql.append(v)
+        i += 1
+
+    plt.plot(ql)
+    plt.legend("Q-Learning")
+    plt.show()
 
 elif algorithm_choice == "all":
     """
     Dynamic Programming
     """
-    # Initialization
-    DP = DP()
-    v_s0 = DP.run()
-    print("The performance of Dynamic Programming is : ", v_s0)
+    plt.plot([4.7 for i in range(EPISODE)])
 
     """
     Monte Carlo
@@ -53,16 +67,23 @@ elif algorithm_choice == "all":
     MC = MC()
     q = []
 
-    for t in range(3, 100):
-        v = MC.run(100, t)
-        print(v)
+    for t in range(0, EPISODE):
+        v = MC.run(EPISODE, t)
         q.append(v)
 
-    plt.plot(q)
-    plt.legend("Monte Carlo")
-    plt.show()
+    plt.plot(q, label='MC')
 
     """
     Q-Learning
     """
-    print("Q-Learning algorithm in construction, please wait for the developper !")
+    QL = QL()
+    ql = []
+
+    i = 0
+    while i < EPISODE:
+        v = QL.run(i)
+        ql.append(v)
+        i += 1
+
+    plt.plot(ql, label='QL')
+    plt.show()

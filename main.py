@@ -13,6 +13,10 @@ if algorithm_choice == "DP" or algorithm_choice == "dp":
     # Initialization
     DP = DP()
     v_s0 = DP.run()
+
+    plt.plot([v_s0 for i in range(10000)])
+    plt.legend("Dynamic Programming")
+    plt.show()
     print("The performance of Dynamic Programming is : ", v_s0)
 
 

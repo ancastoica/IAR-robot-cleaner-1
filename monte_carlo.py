@@ -107,8 +107,8 @@ class MC:
                 # G[t] = G[t]/(ep_length-t)
                 if (episode[t][0], episode[t][1]) in self.Q_function.keys() and (episode[t][0], episode[t][1]) in self.counter.keys():
                     self.counter[(episode[t][0], episode[t][1])] += 1
-                    self.Q_function[(episode[t][0], episode[t][1])] = (self.alpha*G[t] + (self.counter[(episode[t][0], episode[t][1])] - 1) * self.Q_function[(episode[t][0], episode[t][1])])/self.counter[(episode[t][0], episode[t][1])]
-                    # self.Q_function[(episode[t][0], episode[t][1])] = self.Q_function[(episode[t][0], episode[t][1])] + self.alpha * (G[t] - self.Q_function[(episode[t][0], episode[t][1])])
+                    # self.Q_function[(episode[t][0], episode[t][1])] = (self.alpha*G[t] + (self.counter[(episode[t][0], episode[t][1])] - 1) * self.Q_function[(episode[t][0], episode[t][1])])/self.counter[(episode[t][0], episode[t][1])]
+                    self.Q_function[(episode[t][0], episode[t][1])] = self.Q_function[(episode[t][0], episode[t][1])] + self.alpha * (G[t] - self.Q_function[(episode[t][0], episode[t][1])])
                 else:
                     self.counter[(episode[t][0], episode[t][1])] = 1
                     self.Q_function[(episode[t][0], episode[t][1])] = self.alpha * G[t]

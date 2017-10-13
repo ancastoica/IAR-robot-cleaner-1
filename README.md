@@ -2,6 +2,17 @@ Artificial Intelligence Project - Homework 1
 
 To execute the project :
 
+Execution :
+    In the main, you'll be ask to choose one of the algorithm, or the three.
+    >>> "Choose the algorithm to execute (DP; MC; QL; all) : "
+    To get an idea of the computing time :
+        - DP : ~ 5h
+        - MC : ~ 3 min
+        - QL : ~ 3 min
+    In order to facilitate the execution, we ran the DP algorithm many times, averaged the results, and when choosing "all" algorithm,
+    the plot of the DP will be the plot of this value, and not a complete recomputation of the performance.
+
+
 
 Project Structure :
     main.py: Run the algorithms

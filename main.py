@@ -3,7 +3,7 @@ from monte_carlo import MC
 from q_learning import QL
 import matplotlib.pyplot as plt
 
-EPISODE = 20
+EPISODE = 100
 
 algorithm_choice = ""
 while algorithm_choice != "DP" and algorithm_choice != "MC" and algorithm_choice != "QL" and algorithm_choice != "dp" and algorithm_choice != "mc" and algorithm_choice != "ql" and algorithm_choice != "all":

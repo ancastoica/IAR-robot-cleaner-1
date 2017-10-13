@@ -1,4 +1,6 @@
 from emulator import Emulator
+from state import State
+from robot import Robot
 import random
 import api
 import copy
@@ -7,9 +9,10 @@ import copy
 class MC:
     emulator = Emulator("MC")
     epsilon = 0.05
-    alpha = 0.00001
-    gamma = 0.7
+    alpha = 0.001
+    gamma = 0.9
     Q_function = {}
+    counter = {}
 
     def argmax_q_function(self, state):
         """
@@ -40,7 +43,7 @@ class MC:
 
         # (s0, a0, r0) generation
 
-        s = copy.deepcopy(api.INITIAL_STATE)
+        s = State(Robot(0, 0, api.MAPSIZE, api.MAPSIZE, 1, 100), api.INITIAL_MAP, (0, 0))
         id_s = s.to_string()
 
         # epsilon-greedy choice of a0
@@ -61,7 +64,7 @@ class MC:
 
         while index_episode < length:
             index_episode += 1
-            s = copy.deepcopy(self.emulator.simulate(s, a)[1])
+            s = self.emulator.simulate(s, a)[1]
             if s.robot.battery <= 0 or s.is_final_state():
                 return episode
             id_s = s.to_string()
@@ -90,7 +93,8 @@ class MC:
         """
         i = 0
         G = {}
-        # self.Q_function = {}
+        self.Q_function = {}
+        self.counter = {}
 
         while i < limit:
             i += 1
@@ -100,8 +104,12 @@ class MC:
                 G[t] = 0
                 for k in range(t, ep_length):
                     G[t] += pow(self.gamma, t-k) * episode[k][2]
-                if (episode[t][0], episode[t][1]) in self.Q_function.keys():
-                    self.Q_function[(episode[t][0], episode[t][1])] = self.Q_function[(episode[t][0], episode[t][1])] + self.alpha * (G[t] - self.Q_function[(episode[t][0], episode[t][1])])
+                # G[t] = G[t]/(ep_length-t)
+                if (episode[t][0], episode[t][1]) in self.Q_function.keys() and (episode[t][0], episode[t][1]) in self.counter.keys():
+                    self.counter[(episode[t][0], episode[t][1])] += 1
+                    self.Q_function[(episode[t][0], episode[t][1])] = (self.alpha*G[t] + (self.counter[(episode[t][0], episode[t][1])] - 1) * self.Q_function[(episode[t][0], episode[t][1])])/self.counter[(episode[t][0], episode[t][1])]
+                    # self.Q_function[(episode[t][0], episode[t][1])] = self.Q_function[(episode[t][0], episode[t][1])] + self.alpha * (G[t] - self.Q_function[(episode[t][0], episode[t][1])])
                 else:
+                    self.counter[(episode[t][0], episode[t][1])] = 1
                     self.Q_function[(episode[t][0], episode[t][1])] = self.alpha * G[t]
         return self.argmax_q_function(api.INITIAL_STATE.to_string())[1]

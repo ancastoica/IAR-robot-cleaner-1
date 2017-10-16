@@ -27,7 +27,7 @@ Project Structure :
     qLearning.py: The Q learning algorithm
 
 
-État initial
+Initial state
     Home base :
     Position x = 0
     Position y = 0
@@ -38,20 +38,20 @@ Project Structure :
     Orientation = 1
 
 
-Etat
-    L’état est constitué de plusieurs sous paramètres :
-    Position du robot sur la carte { x  [0, length of map], y  [0, height of map] }
-    Orientation du robot  { 0 (N), 1 (E), 2 (S), 3 (O) }
-    Batterie du robot { Batterie suffisante, batterie critique (10%), batterie vide }
-    Propreté de chaque cellule de la carte  { 0 (propre), 1 (sale) }
-    Position de la homebase{ x  [0, length of map], y  [0, height of map] }
+States
+    The state is composed of multiple parametres:
+    Robot position { x  [0, length of map], y  [0, height of map] }
+    Robot orientation  { 0 (N), 1 (E), 2 (S), 3 (O) }
+    Robot battery { sufficient, critical (10%), empty}
+    Status of each cell { 0 (clean), 1 (dirty) }
+    Homebase position { x  [0, length of map], y  [0, height of map] }
 
-Actions du robot
+Robot actions
     {
-    Aspirer sans bouger
-    Avancer sans aspirer
-    Avancer en aspirant
+    Vacuum
+    Go forward vacuuming
+    Go forward no vacuum
     Rotation +90°
     Rotation -90°
-    Charger
+    Recharge
     }
